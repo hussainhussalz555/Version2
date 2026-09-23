@@ -16,7 +16,7 @@ export default function Footer() {
                 alt="BATHAE"
                 fill
                 fallbackKind="logo-light"
-                className="object-contain object-left brightness-0 invert"
+                className="object-contain object-left mix-blend-screen"
               />
             </div>
             <p className="text-stone-400 text-sm leading-relaxed max-w-sm mb-6">

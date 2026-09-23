@@ -62,10 +62,10 @@ export default function AboutPage() {
             className="relative aspect-square bg-stone-100"
           >
             <SafeImage
-              src="/products/product3.png"
+              src="/products/product2.png"
               alt="BATHAE Chrome Shower Set"
               fill
-              className="object-contain p-12"
+              className="object-contain p-12 mix-blend-multiply"
             />
           </motion.div>
         </div>

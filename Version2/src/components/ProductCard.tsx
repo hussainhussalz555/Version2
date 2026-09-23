@@ -36,7 +36,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         transition={{ duration: 0.5 }}
         className="group relative"
       >
-        <div className="relative mb-4 aspect-square overflow-hidden border border-stone-200 bg-stone-100">
+        <div className="relative mb-4 aspect-square overflow-hidden rounded-[1.5rem] border border-stone-200/70 bg-[#efede7] shadow-[0_12px_35px_rgba(32,27,19,.06)] transition-shadow duration-500 group-hover:shadow-[0_26px_50px_rgba(32,27,19,.16)]">
           <Link
             href={`/products/${product.slug}`}
             aria-label={`View ${product.name}, ${product.subtitle}`}
@@ -47,7 +47,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               alt={product.name}
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-              className="object-contain p-8 transition-transform duration-700 group-hover:scale-105"
+              className="object-contain p-8 mix-blend-multiply transition-transform duration-700 group-hover:scale-105"
             />
           </Link>
 
@@ -67,7 +67,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               type="button"
               onClick={handleAddToCart}
               disabled={product.stock === 0}
-              className="flex min-h-11 flex-1 items-center justify-center gap-2 bg-stone-950 px-3 text-xs font-semibold uppercase tracking-[0.1em] text-white transition-colors hover:bg-amber-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex min-h-11 flex-1 rounded-full items-center justify-center gap-2 bg-stone-950 px-3 text-xs font-semibold uppercase tracking-[0.1em] text-white transition-colors hover:bg-amber-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <ShoppingBag size={14} aria-hidden="true" />
               Add to Cart
@@ -76,7 +76,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               type="button"
               onClick={() => setQuickViewOpen(true)}
               aria-label={`Quick view ${product.name}, ${product.subtitle}`}
-              className="flex min-h-11 min-w-11 items-center justify-center border border-stone-300 bg-white text-stone-800 transition-colors hover:bg-stone-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-600 focus-visible:ring-offset-2"
+              className="flex min-h-11 min-w-11 rounded-full items-center justify-center border border-stone-300 bg-white text-stone-800 transition-colors hover:bg-stone-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-600 focus-visible:ring-offset-2"
             >
               <Eye size={16} aria-hidden="true" />
             </button>

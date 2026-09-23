@@ -1,474 +1,92 @@
 "use client";
 
-import { useRef } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
+import { ArrowDown, ArrowRight, MoveUpRight, Sparkles } from "lucide-react";
 import SafeImage from "@/components/SafeImage";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowRight, ChevronDown } from "lucide-react";
-import { products } from "@/lib/products";
-import { formatPrice, getStockLabel } from "@/lib/products";
 import ProductCard from "@/components/ProductCard";
-import { BRAND_CONFIG } from "@/lib/config";
+import { products } from "@/lib/products";
 
-const QUALITY_PILLARS = [
-  {
-    icon: "◈",
-    title: "Precision Engineering",
-    body: "Every BATHAE fitting is manufactured to exacting tolerances. The result is a product that installs cleanly, operates smoothly, and holds up over years of daily use.",
-  },
-  {
-    icon: "◇",
-    title: "Material Integrity",
-    body: "We select solid brass bodies, stainless steel components, and PVD-applied finishes because quality materials are the foundation of a product that ages well.",
-  },
-  {
-    icon: "○",
-    title: "Design Restraint",
-    body: "Good design is not about excess. BATHAE products are shaped to be quietly authoritative — elegant without demanding attention, refined without becoming dated.",
-  },
-  {
-    icon: "△",
-    title: "Customer Assurance",
-    body: BRAND_CONFIG.warrantyStatement,
-  },
-];
-
-const CATEGORIES = [
-  {
-    label: "Shower Sets",
-    description: "Complete concealed systems",
-    href: "/shop?category=shower-sets",
-    image: "/products/product3.png",
-  },
-  {
-    label: "Gold Finish",
-    description: "Brushed gold collections",
-    href: "/shop?finish=gold",
-    image: "/products/product2.png",
-  },
-  {
-    label: "Matte Black",
-    description: "Contemporary black fixtures",
-    href: "/shop?finish=matte-black",
-    image: "/products/product1.png",
-  },
+const finishes = [
+  { name: "Brushed Gold", detail: "A warmer expression of luxury", image: "/products/product1.png", href: "/shop?finish=gold", number: "01" },
+  { name: "Polished Chrome", detail: "Brilliance in every reflection", image: "/products/product2.png", href: "/shop?finish=chrome", number: "02" },
+  { name: "Matte Black", detail: "An architectural statement", image: "/products/product3.png", href: "/shop?finish=matte-black", number: "03" },
 ];
 
 export default function HomePage() {
-  const heroRef = useRef<HTMLDivElement>(null);
-  const { scrollY } = useScroll();
-  const heroY = useTransform(scrollY, [0, 600], [0, 120]);
-  const heroOpacity = useTransform(scrollY, [0, 400], [1, 0]);
-
-  const featuredProducts = products.filter((p) => p.isFeatured);
-
   return (
-    <main>
-      {/* ── Hero ── */}
-      <section
-        ref={heroRef}
-        className="relative min-h-screen flex items-center justify-center overflow-hidden bg-stone-950"
-      >
-        {/* Background texture */}
-        <div className="absolute inset-0 bg-gradient-to-br from-stone-900 via-stone-950 to-black" />
-
-        {/* Ambient gold glow */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="w-[600px] h-[600px] rounded-full bg-amber-500/5 blur-[100px]" />
-        </div>
-
-        {/* Hero product image */}
-        <motion.div
-          style={{ y: heroY, opacity: heroOpacity }}
-          className="absolute right-0 top-0 bottom-0 w-full md:w-1/2 flex items-center justify-center opacity-40 md:opacity-60"
-        >
-          <div className="relative w-full h-full max-w-lg">
-            <SafeImage
-              src="/products/product2.png"
-              alt="BATHAE Shower Set"
-              fill
-              className="object-contain"
-              priority
-            />
-          </div>
-        </motion.div>
-
-        {/* Content */}
-        <div className="relative z-10 max-w-screen-xl mx-auto px-6 lg:px-12 w-full pt-20">
-          <div className="max-w-2xl">
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="text-amber-400 text-[11px] tracking-[0.3em] uppercase font-medium mb-8"
-            >
-              Premium Ceramics &amp; Bathroom Fixtures
-            </motion.p>
-
-            <motion.h1
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.35 }}
-              className="text-white text-6xl md:text-8xl font-light leading-none tracking-tight mb-8"
-            >
-              Elevate
-              <br />
-              <span className="italic text-stone-300">the</span>
-              <br />
-              Everyday.
-            </motion.h1>
-
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-              className="text-stone-400 text-lg font-light leading-relaxed mb-12 max-w-md"
-            >
-              Where precision engineering meets refined design. Every fitting is a considered act
-              of craft.
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.65 }}
-              className="flex flex-col sm:flex-row gap-4"
-            >
-              <Link
-                href="/shop"
-                className="inline-flex items-center gap-3 bg-amber-500 text-stone-950 px-8 py-4 text-sm font-semibold tracking-widest uppercase hover:bg-amber-400 transition-colors"
-              >
-                Explore Collection
-                <ArrowRight size={16} />
-              </Link>
-              <Link
-                href="/about"
-                className="inline-flex items-center gap-3 border border-white/20 text-white px-8 py-4 text-sm font-medium tracking-widest uppercase hover:border-white/50 transition-colors"
-              >
-                Our Story
-              </Link>
-            </motion.div>
-          </div>
-        </div>
-
-        {/* Scroll indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.2 }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/30"
-        >
-          <span className="text-[10px] tracking-[0.3em] uppercase">Scroll</span>
-          <motion.div
-            animate={{ y: [0, 6, 0] }}
-            transition={{ repeat: Infinity, duration: 2 }}
-          >
-            <ChevronDown size={16} />
-          </motion.div>
-        </motion.div>
-      </section>
-
-      {/* ── Brand Strip ── */}
-      <section className="border-y border-stone-200 py-6 bg-white">
-        <div className="max-w-screen-xl mx-auto px-6 lg:px-12">
-          <div className="flex flex-wrap items-center justify-center gap-x-16 gap-y-4">
-            {["Concealed Systems", "PVD Finishes", "Brass Body", "Complete Sets", "Pakistan Delivery"].map(
-              (item) => (
-                <span
-                  key={item}
-                  className="text-[11px] text-stone-400 tracking-[0.25em] uppercase font-medium"
-                >
-                  {item}
-                </span>
-              )
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Featured Products ── */}
-      <section className="py-24 px-6 lg:px-12 max-w-screen-xl mx-auto">
-        <div className="flex items-end justify-between mb-16">
-          <div>
-            <motion.p
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              className="text-[11px] text-amber-500 tracking-[0.3em] uppercase font-medium mb-3"
-            >
-              The Collection
-            </motion.p>
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="text-stone-900 text-5xl font-light leading-tight"
-            >
-              Featured
-              <br />
-              <span className="italic text-stone-500">Products</span>
-            </motion.h2>
-          </div>
-          <Link
-            href="/shop"
-            className="hidden md:flex items-center gap-2 text-sm text-stone-500 hover:text-stone-900 transition-colors group"
-          >
-            View All
-            <ArrowRight
-              size={16}
-              className="group-hover:translate-x-1 transition-transform"
-            />
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
-          {featuredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
-
-        <div className="mt-12 text-center md:hidden">
-          <Link
-            href="/shop"
-            className="inline-flex items-center gap-2 text-sm text-stone-600 hover:text-stone-900 underline underline-offset-4 transition-colors"
-          >
-            View All Products
-          </Link>
-        </div>
-      </section>
-
-      {/* ── Editorial Divider ── */}
-      <section className="py-20 bg-stone-900">
-        <div className="max-w-screen-xl mx-auto px-6 lg:px-12">
-          <div className="grid md:grid-cols-2 gap-16 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
-              <p className="text-amber-400 text-[11px] tracking-[0.3em] uppercase font-medium mb-4">
-                Complete Sets
-              </p>
-              <h2 className="text-white text-5xl font-light leading-tight mb-6">
-                One Set.
-                <br />
-                <span className="italic text-stone-400">Complete.</span>
-              </h2>
-              <p className="text-stone-400 leading-relaxed mb-8">
-                The BATHAE concealed shower set includes everything needed for a seamless
-                installation: the concealed mixer valve, the 12-inch overhead rainfall head, a
-                handheld unit, wall spout, hose, and holder. Available in Matte Black, Brushed
-                Gold, and Polished Chrome.
-              </p>
-              <div className="flex items-center gap-4">
-                <span className="text-white text-3xl font-light">
-                  {formatPrice(75000)}
-                </span>
-                <span className="text-stone-500 text-sm">Full Set</span>
-              </div>
-              <Link
-                href="/products/concealed-shower-set-matte-black"
-                className="inline-flex items-center gap-2 mt-8 bg-amber-500 text-stone-950 px-6 py-3.5 text-sm font-semibold tracking-widest uppercase hover:bg-amber-400 transition-colors"
-              >
-                Shop Now <ArrowRight size={15} />
-              </Link>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="relative"
-            >
-              <div className="relative aspect-square max-w-md mx-auto">
-                <div className="absolute inset-0 bg-stone-800" />
-                <SafeImage
-                  src="/products/product1.png"
-                  alt="Concealed Shower Set Matte Black"
-                  fill
-                  className="object-contain p-8"
-                />
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Categories ── */}
-      <section className="py-24 px-6 lg:px-12 max-w-screen-xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
-          <p className="text-[11px] text-amber-500 tracking-[0.3em] uppercase font-medium mb-3">
-            Browse by
-          </p>
-          <h2 className="text-stone-900 text-5xl font-light">Collections</h2>
-        </motion.div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {CATEGORIES.map((cat, i) => (
-            <motion.div
-              key={cat.label}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-            >
-              <Link href={cat.href} className="group block relative">
-                <div className="relative aspect-[4/5] bg-stone-100 overflow-hidden">
-                  <SafeImage
-                    src={cat.image}
-                    alt={cat.label}
-                    fill
-                    className="object-contain p-10 transition-transform duration-700 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-stone-950/0 group-hover:bg-stone-950/10 transition-colors duration-300" />
-                </div>
-                <div className="mt-4">
-                  <h3 className="text-stone-900 font-medium text-lg group-hover:text-stone-600 transition-colors">
-                    {cat.label}
-                  </h3>
-                  <p className="text-stone-400 text-sm mt-0.5 flex items-center gap-1">
-                    {cat.description}
-                    <ArrowRight
-                      size={13}
-                      className="group-hover:translate-x-1 transition-transform"
-                    />
-                  </p>
-                </div>
-              </Link>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* ── Quality Pillars ── */}
-      <section className="py-24 bg-stone-100">
-        <div className="max-w-screen-xl mx-auto px-6 lg:px-12">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <p className="text-[11px] text-amber-500 tracking-[0.3em] uppercase font-medium mb-3">
-              Our Standards
-            </p>
-            <h2 className="text-stone-900 text-5xl font-light">
-              Quality at
-              <br />
-              <span className="italic text-stone-500">Every Detail</span>
-            </h2>
-          </motion.div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {QUALITY_PILLARS.map((pillar, i) => (
-              <motion.div
-                key={pillar.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="bg-white p-8 border border-stone-200"
-              >
-                <span className="text-3xl text-amber-500 block mb-6">{pillar.icon}</span>
-                <h3 className="text-stone-900 font-semibold text-base mb-3">{pillar.title}</h3>
-                <p className="text-stone-500 text-sm leading-relaxed">{pillar.body}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Gold Finish Showcase ── */}
-      <section className="py-24 px-6 lg:px-12 max-w-screen-xl mx-auto">
-        <div className="grid md:grid-cols-2 gap-16 items-center">
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="relative aspect-square bg-amber-50"
-          >
-            <SafeImage
-              src="/products/product2.png"
-              alt="BATHAE Brushed Gold"
-              fill
-              className="object-contain p-12"
-            />
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-          >
-            <p className="text-[11px] text-amber-500 tracking-[0.3em] uppercase font-medium mb-4">
-              Brushed Gold
-            </p>
-            <h2 className="text-stone-900 text-5xl font-light leading-tight mb-6">
-              A Finish Worth
-              <br />
-              <span className="italic text-stone-500">Noticing</span>
-            </h2>
-            <p className="text-stone-500 leading-relaxed mb-8">
-              The BATHAE Brushed Gold finish is applied through a PVD process that bonds a
-              warm, matte-toned gold layer to the brass substrate. The result is a surface that
-              resists tarnish, repels fingerprints, and holds its character for years.
-            </p>
-            <Link
-              href="/shop?finish=gold"
-              className="inline-flex items-center gap-2 border-b border-stone-900 text-stone-900 pb-1 text-sm font-medium tracking-widest uppercase hover:border-amber-500 hover:text-amber-600 transition-colors group"
-            >
-              Shop Gold Finish
-              <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
-            </Link>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ── Final CTA ── */}
-      <section className="py-24 bg-stone-950">
-        <div className="max-w-screen-xl mx-auto px-6 lg:px-12 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <p className="text-amber-400 text-[11px] tracking-[0.3em] uppercase font-medium mb-6">
-              Ready to Elevate Your Bathroom
-            </p>
-            <h2 className="text-white text-6xl font-light leading-tight mb-6">
-              Start with
-              <br />
-              <span className="italic text-stone-400">the Finest</span>
-            </h2>
-            <p className="text-stone-400 max-w-lg mx-auto mb-12 leading-relaxed">
-              Browse the full BATHAE collection. Every product is available now with delivery across
-              Pakistan.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                href="/shop"
-                className="inline-flex items-center justify-center gap-2 bg-amber-500 text-stone-950 px-10 py-4 text-sm font-semibold tracking-widest uppercase hover:bg-amber-400 transition-colors"
-              >
-                Shop the Collection
-              </Link>
-              <a
-                href={`https://wa.me/${BRAND_CONFIG.whatsappNumber}?text=${encodeURIComponent(BRAND_CONFIG.whatsappDefaultMessage)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 border border-white/20 text-white px-10 py-4 text-sm font-medium tracking-widest uppercase hover:border-white/50 transition-colors"
-              >
-                WhatsApp Us
-              </a>
+    <main className="home-page">
+      <section className="home-hero relative isolate flex min-h-[min(850px,100svh)] items-center overflow-hidden bg-[#0d0e0d] pt-20 text-white">
+        <div className="hero-orbit" aria-hidden="true" />
+        <div className="hero-glow" aria-hidden="true" />
+        <div className="relative z-10 mx-auto w-full max-w-screen-xl px-6 pb-20 pt-24 sm:pb-28 lg:px-12 lg:pt-32">
+          <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.75 }} className="max-w-4xl">
+            <p className="eyebrow mb-7 text-[#d9bb82]">BATHAE <span className="mx-3 text-white/25">/</span> The art of living well</p>
+            <h1 className="text-balance text-[clamp(3.1rem,10vw,9.5rem)] leading-[0.88] tracking-[-0.065em]">
+              Elevate <br /><span className="italic font-normal text-[#c8b399]">the</span> everyday<span className="text-[#b99968]">.</span>
+            </h1>
+            <div className="mt-9 flex max-w-2xl flex-col gap-8 sm:mt-12 sm:flex-row sm:items-end sm:justify-between">
+              <p className="max-w-sm text-base leading-relaxed text-white/60 sm:text-lg">Considered fixtures for spaces that feel extraordinary, every day.</p>
+              <Link href="/shop" className="button-luxe button-gold shrink-0">Explore collection <ArrowRight size={17} aria-hidden="true" /></Link>
             </div>
           </motion.div>
+          <div className="mt-20 flex items-center justify-between border-t border-white/15 pt-6 text-[10px] uppercase tracking-[0.2em] text-white/45 sm:mt-28">
+            <span>Precision in every detail</span><a href="#signature" className="flex items-center gap-2 transition-colors hover:text-white">Discover more <ArrowDown size={14} /></a>
+          </div>
         </div>
       </section>
+
+      {/* Product photography belongs on a light studio surface, not on top of the dark hero. */}
+      <section id="signature" className="studio-section overflow-hidden bg-[#ebe9e3]">
+        <div className="mx-auto grid max-w-screen-xl items-center gap-8 px-6 py-14 md:grid-cols-[0.85fr_1.15fr] md:gap-8 md:py-20 lg:px-12">
+          <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="relative z-10 md:py-10">
+            <p className="eyebrow text-[#9e7844]">The signature collection / 01</p>
+            <h2 className="mt-6 text-[clamp(3.2rem,6vw,6.6rem)] leading-[0.95] tracking-[-0.05em] text-[#292823]">A new <br /><span className="italic text-[#8d7b65]">standard.</span></h2>
+            <p className="mt-7 max-w-sm leading-relaxed text-stone-600">A complete concealed shower system. Uncompromising in form, quietly remarkable in function. Discover the finish that feels like you.</p>
+            <Link href="/products/concealed-shower-set-brushed-gold" className="button-luxe button-dark mt-9">Discover the set <ArrowRight size={17} /></Link>
+          </motion.div>
+          <div className="studio-stage relative min-h-[340px] overflow-hidden rounded-[2rem] sm:min-h-[480px] lg:min-h-[650px]" aria-label="Brushed Gold concealed shower set">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_48%,#fff_0%,#f5f2eb_70%)]" />
+            <div className="absolute inset-x-[12%] bottom-[7%] h-8 rounded-full bg-stone-500/15 blur-2xl" />
+            <SafeImage src="/products/product1.png" alt="Brushed Gold concealed shower set" fill priority sizes="(max-width: 768px) 100vw, 55vw" className="object-contain p-5 mix-blend-multiply drop-shadow-[0_25px_28px_rgba(80,60,35,0.13)] sm:p-10" />
+            <div className="absolute bottom-5 left-5 rounded-full border border-stone-300/80 bg-white/75 px-4 py-2 text-[10px] uppercase tracking-[0.16em] text-stone-700 backdrop-blur-xl sm:bottom-8 sm:left-8">Brushed Gold · No. 01</div>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-[#f7f5f0] py-20 sm:py-28">
+        <div className="mx-auto max-w-screen-xl px-6 lg:px-12">
+          <div className="mb-10 flex flex-col justify-between gap-6 sm:mb-14 sm:flex-row sm:items-end">
+            <div><p className="eyebrow text-[#9e7844]">Explore the palette</p><h2 className="mt-4 text-5xl tracking-[-0.04em] text-stone-900 sm:text-6xl">One vision. <span className="italic text-stone-500">Three finishes.</span></h2></div>
+            <p className="max-w-xs text-sm leading-relaxed text-stone-500">Each finish tells a different story. Every detail is unmistakably BATHAE.</p>
+          </div>
+          <div className="grid gap-5 md:grid-cols-3">
+            {finishes.map((finish) => <Link key={finish.name} href={finish.href} className="finish-card group relative block overflow-hidden rounded-[1.75rem] border border-stone-200/70 bg-[#eeece6] p-5 sm:p-7">
+              <div className="flex items-center justify-between text-[11px] tracking-widest text-stone-500"><span>{finish.number} / 03</span><MoveUpRight size={17} className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" /></div>
+              <div className="relative my-2 aspect-square overflow-hidden rounded-2xl bg-[#f5f3ee]"><SafeImage src={finish.image} alt={`${finish.name} shower set`} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-contain p-4 mix-blend-multiply transition-transform duration-700 group-hover:scale-[1.07]" /></div>
+              <h3 className="text-3xl tracking-tight text-stone-900">{finish.name}</h3><p className="mt-1 text-sm text-stone-500">{finish.detail}</p>
+            </Link>)}
+          </div>
+        </div>
+      </section>
+
+      <section className="relative overflow-hidden bg-[#151714] py-24 text-white sm:py-36">
+        <div className="absolute -right-36 top-0 h-[500px] w-[500px] rounded-full bg-[#997445]/10 blur-[100px]" aria-hidden="true" />
+        <div className="relative mx-auto grid max-w-screen-xl gap-14 px-6 md:grid-cols-2 md:items-center lg:px-12">
+          <div><p className="eyebrow text-[#d9bb82]">The BATHAE philosophy</p><h2 className="mt-6 text-[clamp(2.9rem,6vw,6.5rem)] leading-[0.98] tracking-[-0.05em]">Luxury is in <br /><span className="italic text-[#bdab92]">the details.</span></h2></div>
+          <div className="max-w-md md:ml-auto"><Sparkles size={29} strokeWidth={1} className="mb-7 text-[#c9a76b]" /><p className="text-lg leading-relaxed text-white/65">We believe a bathroom is more than a functional space. It is a moment of calm, a personal ritual, an expression of what matters.</p><Link href="/about" className="mt-8 inline-flex items-center gap-3 border-b border-[#c9a76b] pb-2 text-sm tracking-wide text-white transition-colors hover:text-[#d9bb82]">Our story <ArrowRight size={16} /></Link></div>
+        </div>
+      </section>
+
+      <section className="bg-[#f7f5f0] py-20 sm:py-28">
+        <div className="mx-auto max-w-screen-xl px-6 lg:px-12">
+          <div className="mb-12 flex items-end justify-between gap-4"><div><p className="eyebrow text-[#9e7844]">Curated for you</p><h2 className="mt-4 text-5xl tracking-tight text-stone-900 sm:text-6xl">The collection<span className="text-[#b29369]">.</span></h2></div><Link href="/shop" className="hidden items-center gap-2 text-sm text-stone-700 hover:text-[#956d3b] sm:flex">Shop all <ArrowRight size={16} /></Link></div>
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">{products.filter(p => p.isFeatured).map(product => <ProductCard key={product.id} product={product} />)}</div>
+          <Link href="/shop" className="button-luxe button-dark mt-10 sm:hidden">Shop all <ArrowRight size={16} /></Link>
+        </div>
+      </section>
+
+      <section className="bg-[#ddd8cc] px-6 py-24 text-center sm:py-32 lg:px-12"><div className="mx-auto max-w-3xl"><p className="eyebrow text-[#896943]">Your space, reimagined</p><h2 className="mt-6 text-[clamp(2.9rem,7vw,7rem)] leading-[0.98] tracking-[-0.05em] text-[#292823]">Make room for <span className="italic text-[#89765c]">remarkable.</span></h2><p className="mx-auto mt-6 max-w-lg leading-relaxed text-stone-600">The right details change everything. Find yours in the BATHAE collection.</p><div className="mt-9 flex flex-wrap justify-center gap-3"><Link href="/shop" className="button-luxe button-dark">Explore collection <ArrowRight size={17} /></Link><Link href="/contact" className="button-luxe button-outline">Get in touch <ArrowRight size={17} /></Link></div></div></section>
     </main>
   );
 }
