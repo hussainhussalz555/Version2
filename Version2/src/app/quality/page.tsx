@@ -159,7 +159,7 @@ export default function QualityPage() {
             {["/products/product1.png", "/products/product2.png", "/products/product3.png"].map(
               (img, i) => (
                 <div key={i} className="relative aspect-square bg-stone-100 border border-stone-200">
-                  <SafeImage src={img} alt="Finish" fill className="object-contain p-4" />
+                  <SafeImage src={img} alt="Finish" fill className="object-contain p-4 mix-blend-multiply" />
                 </div>
               )
             )}

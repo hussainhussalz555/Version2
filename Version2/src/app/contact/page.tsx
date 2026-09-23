@@ -2,146 +2,62 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { ArrowRight, ArrowUpRight, Mail, MapPin, Phone, MessageCircle } from "lucide-react";
 import { BRAND_CONFIG } from "@/lib/config";
 
 export default function ContactPage() {
   const [form, setForm] = useState({ name: "", email: "", phone: "", message: "" });
-  const [sent, setSent] = useState(false);
+  const update = (key: keyof typeof form, value: string) => setForm(current => ({ ...current, [key]: value }));
 
-  const update = (k: keyof typeof form, v: string) =>
-    setForm((f) => ({ ...f, [k]: v }));
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSent(true);
-    setForm({ name: "", email: "", phone: "", message: "" });
+  // There is no messaging backend. Open a prefilled WhatsApp conversation instead
+  // of displaying a false “message sent” confirmation.
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const text = `Hello BATHAE, I'd like to get in touch.\n\nName: ${form.name}\nEmail: ${form.email || "Not provided"}\nPhone: ${form.phone || "Not provided"}\n\n${form.message}`;
+    window.open(`https://wa.me/${BRAND_CONFIG.whatsappNumber}?text=${encodeURIComponent(text)}`, "_blank", "noopener,noreferrer");
   };
 
-  const whatsappUrl = `https://wa.me/${BRAND_CONFIG.whatsappNumber}?text=${encodeURIComponent(
-    `Hi, I'd like to get in touch with BATHAE.`
-  )}`;
+  return <main className="min-h-screen bg-[#f4f1eb] pt-20">
+    <section className="relative overflow-hidden bg-[#111310] px-6 py-20 text-white sm:py-28 lg:px-12">
+      <div className="absolute -right-40 -top-40 h-[650px] w-[650px] rounded-full border border-[#a98551]/15 shadow-[0_0_130px_30px_rgba(177,136,76,.09)]" aria-hidden="true" />
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="relative mx-auto max-w-screen-xl">
+        <p className="eyebrow text-[#d9bb82]">Contact / BATHAE</p>
+        <h1 className="mt-7 max-w-4xl text-[clamp(3rem,9vw,9rem)] leading-[0.92] tracking-[-0.06em]">Let&apos;s make <br /><span className="italic text-[#bca88d]">space for better.</span></h1>
+        <p className="mt-9 max-w-lg text-lg leading-relaxed text-white/60">Questions about the collection? Planning a space of your own? We&apos;d love to hear from you.</p>
+      </motion.div>
+    </section>
 
-  return (
-    <main className="pt-20 min-h-screen bg-stone-50">
-      {/* Header */}
-      <section className="bg-white border-b border-stone-200 py-20 px-6 lg:px-12">
-        <div className="max-w-screen-xl mx-auto">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <p className="text-[11px] text-amber-500 tracking-[0.3em] uppercase font-medium mb-3">
-              Get in Touch
-            </p>
-            <h1 className="text-5xl font-light text-stone-900">Contact</h1>
-          </motion.div>
+    <section className="mx-auto grid max-w-screen-xl gap-12 px-6 py-16 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20 lg:px-12 lg:py-24">
+      <div>
+        <p className="eyebrow text-[#947148]">The conversation starts here</p>
+        <h2 className="mt-5 max-w-md text-5xl leading-[1.05] tracking-tight text-stone-900">We&apos;re here to <span className="italic text-[#9a8265]">help.</span></h2>
+        <p className="mt-5 max-w-md leading-relaxed text-stone-600">Whether it&apos;s a question about a finish, an order, or the right fit for your project, reach out in the way that works for you.</p>
+        <div className="mt-10 space-y-3">
+          {[
+            { Icon: Mail, label: "Email us", value: BRAND_CONFIG.email, href: `mailto:${BRAND_CONFIG.email}` },
+            { Icon: Phone, label: "Call us", value: BRAND_CONFIG.phone, href: `tel:${BRAND_CONFIG.phone.replace(/\s/g, "")}` },
+            { Icon: MapPin, label: "Based in", value: BRAND_CONFIG.address, href: undefined },
+          ].map(({ Icon, label, value, href }) => <div key={label} className="flex items-center gap-4 rounded-2xl border border-stone-200/80 bg-white/65 p-4 shadow-[0_12px_40px_rgba(40,32,20,.03)] sm:p-5">
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#eae3d7] text-[#765f41]"><Icon size={20} strokeWidth={1.5} /></span>
+            <div className="min-w-0 flex-1"><p className="text-[10px] uppercase tracking-[0.18em] text-stone-500">{label}</p>{href ? <a href={href} className="mt-1 block break-all text-sm font-medium text-stone-900 transition-colors hover:text-[#9a7444] sm:text-base">{value}</a> : <p className="mt-1 text-sm font-medium text-stone-900 sm:text-base">{value}</p>}</div>
+            {href && <ArrowUpRight className="shrink-0 text-stone-400" size={17} />}
+          </div>)}
         </div>
-      </section>
+        <p className="mt-6 text-xs leading-relaxed text-stone-500">Prefer a quick conversation? <a className="font-semibold text-stone-800 underline underline-offset-4 hover:text-amber-700" href={`https://wa.me/${BRAND_CONFIG.whatsappNumber}?text=${encodeURIComponent(BRAND_CONFIG.whatsappDefaultMessage)}`} target="_blank" rel="noopener noreferrer">Start a WhatsApp chat <ArrowUpRight className="inline" size={13} /></a></p>
+      </div>
 
-      <div className="max-w-screen-xl mx-auto px-6 lg:px-12 py-20">
-        <div className="grid lg:grid-cols-2 gap-20">
-          {/* Contact Info */}
-          <div>
-            <div className="space-y-8 mb-12">
-              {[
-                { label: "Email", value: BRAND_CONFIG.email, href: `mailto:${BRAND_CONFIG.email}` },
-                { label: "Phone", value: BRAND_CONFIG.phone, href: `tel:${BRAND_CONFIG.phone}` },
-                { label: "Location", value: BRAND_CONFIG.address, href: undefined },
-              ].map((item) => (
-                <div key={item.label}>
-                  <p className="text-[11px] text-stone-400 tracking-[0.25em] uppercase mb-2">
-                    {item.label}
-                  </p>
-                  {item.href ? (
-                    <a
-                      href={item.href}
-                      className="text-stone-800 hover:text-amber-600 transition-colors text-lg font-light"
-                    >
-                      {item.value}
-                    </a>
-                  ) : (
-                    <p className="text-stone-800 text-lg font-light">{item.value}</p>
-                  )}
-                </div>
-              ))}
-            </div>
-
-            <a
-              href={whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 bg-[#25D366] text-white px-8 py-4 text-sm font-semibold tracking-widest uppercase hover:bg-[#20bd5a] transition-colors"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" className="w-5 h-5">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z" />
-              </svg>
-              Chat on WhatsApp
-            </a>
-          </div>
-
-          {/* Contact Form */}
-          <div>
-            {sent ? (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="bg-emerald-50 border border-emerald-200 p-10 text-center"
-              >
-                <p className="text-3xl mb-4">✓</p>
-                <h3 className="text-stone-900 font-semibold text-lg mb-2">Message Received</h3>
-                <p className="text-stone-500 text-sm leading-relaxed">
-                  Thank you for reaching out. Our team will be in touch with you shortly.
-                </p>
-              </motion.div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs text-stone-500 tracking-widest uppercase mb-2">Name</label>
-                    <input
-                      required
-                      value={form.name}
-                      onChange={(e) => update("name", e.target.value)}
-                      className="w-full border border-stone-200 bg-white px-4 py-3 text-sm text-stone-800 outline-none focus:border-stone-400 transition-colors"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs text-stone-500 tracking-widest uppercase mb-2">Phone</label>
-                    <input
-                      value={form.phone}
-                      onChange={(e) => update("phone", e.target.value)}
-                      className="w-full border border-stone-200 bg-white px-4 py-3 text-sm text-stone-800 outline-none focus:border-stone-400 transition-colors"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-xs text-stone-500 tracking-widest uppercase mb-2">Email</label>
-                  <input
-                    type="email"
-                    value={form.email}
-                    onChange={(e) => update("email", e.target.value)}
-                    className="w-full border border-stone-200 bg-white px-4 py-3 text-sm text-stone-800 outline-none focus:border-stone-400 transition-colors"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs text-stone-500 tracking-widest uppercase mb-2">Message</label>
-                  <textarea
-                    required
-                    rows={5}
-                    value={form.message}
-                    onChange={(e) => update("message", e.target.value)}
-                    className="w-full border border-stone-200 bg-white px-4 py-3 text-sm text-stone-800 outline-none focus:border-stone-400 resize-none transition-colors"
-                    placeholder="How can we help you?"
-                  />
-                </div>
-                <button
-                  type="submit"
-                  className="w-full bg-stone-900 text-white py-4 text-sm font-medium tracking-widest uppercase hover:bg-stone-700 transition-colors"
-                >
-                  Send Message
-                </button>
-              </form>
-            )}
-          </div>
+      <div className="relative overflow-hidden rounded-[2rem] border border-white/70 bg-white/80 p-6 shadow-[0_30px_80px_rgba(44,36,25,.08)] backdrop-blur-xl sm:p-10 lg:p-12">
+        <div className="absolute right-0 top-0 h-48 w-48 rounded-full bg-[#e6d5b8]/25 blur-3xl" aria-hidden="true" />
+        <div className="relative"><div className="flex items-center justify-between gap-3"><p className="eyebrow text-[#947148]">Send an enquiry</p><span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#f1e8d9] text-[#8e6c41]"><MessageCircle size={20} strokeWidth={1.5} /></span></div><h2 className="mt-5 text-4xl tracking-tight text-stone-900 sm:text-5xl">Tell us what&apos;s <span className="italic">on your mind.</span></h2><p className="mt-3 text-sm leading-relaxed text-stone-500">Fill this in and continue the conversation in WhatsApp.</p>
+          <form onSubmit={handleSubmit} className="mt-9 space-y-5">
+            <div className="grid gap-5 sm:grid-cols-2"><div><label htmlFor="contact-name" className="contact-label">Your name *</label><input id="contact-name" autoComplete="name" required maxLength={100} value={form.name} onChange={e => update("name", e.target.value)} className="contact-input" placeholder="Your name" /></div><div><label htmlFor="contact-phone" className="contact-label">Phone number</label><input id="contact-phone" type="tel" autoComplete="tel" maxLength={40} value={form.phone} onChange={e => update("phone", e.target.value)} className="contact-input" placeholder="Your number" /></div></div>
+            <div><label htmlFor="contact-email" className="contact-label">Email address</label><input id="contact-email" type="email" autoComplete="email" maxLength={150} value={form.email} onChange={e => update("email", e.target.value)} className="contact-input" placeholder="you@example.com" /></div>
+            <div><label htmlFor="contact-message" className="contact-label">How can we help? *</label><textarea id="contact-message" required maxLength={2000} rows={5} value={form.message} onChange={e => update("message", e.target.value)} className="contact-input resize-y" placeholder="Tell us about your project or question..." /></div>
+            <button type="submit" className="button-luxe button-dark w-full justify-center">Continue in WhatsApp <ArrowRight size={17} /></button>
+            <p className="text-center text-xs text-stone-500">This opens WhatsApp with your message ready to send. Nothing is submitted on this page.</p>
+          </form>
         </div>
       </div>
-    </main>
-  );
+    </section>
+  </main>;
 }

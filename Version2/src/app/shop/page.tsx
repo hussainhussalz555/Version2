@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { Search, SlidersHorizontal, X } from "lucide-react";
@@ -214,10 +214,15 @@ function ShopContent() {
   );
 }
 
+function ShopWithParams() {
+  const params = useSearchParams();
+  return <ShopContent key={params.toString()} />;
+}
+
 export default function ShopPage() {
   return (
     <Suspense fallback={<div className="pt-20 min-h-screen bg-stone-50" />}>
-      <ShopContent />
+      <ShopWithParams />
     </Suspense>
   );
 }

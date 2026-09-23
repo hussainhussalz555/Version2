@@ -4,13 +4,13 @@ import { useState } from "react";
 import Link from "next/link";
 import SafeImage from "@/components/SafeImage";
 import { motion } from "framer-motion";
-import { ChevronRight, CheckCircle2, Copy } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { useCartStore } from "@/store/cart";
 import { formatPrice } from "@/lib/products";
 import { BRAND_CONFIG } from "@/lib/config";
 
 type PaymentMethod = "cod" | "jazzcash" | "easypaisa";
-type Step = "info" | "shipping" | "payment" | "review" | "confirmation";
+type Step = "info" | "shipping" | "payment" | "review";
 
 interface FormData {
   firstName: string;
@@ -25,19 +25,10 @@ interface FormData {
   paymentMethod: PaymentMethod;
 }
 
-function generateOrderNumber() {
-  return `BAT-${Date.now().toString(36).toUpperCase()}-${Math.random()
-    .toString(36)
-    .slice(2, 6)
-    .toUpperCase()}`;
-}
-
 export default function CheckoutPage() {
-  const { items, getSubtotal, clearCart } = useCartStore();
+  const { items } = useCartStore();
   const subtotal = useCartStore((s) => s.getSubtotal());
   const [step, setStep] = useState<Step>("info");
-  const [orderNumber, setOrderNumber] = useState("");
-  const [copied, setCopied] = useState(false);
 
   const [form, setForm] = useState<FormData>({
     firstName: "",
@@ -55,16 +46,10 @@ export default function CheckoutPage() {
   const update = (k: keyof FormData, v: string) => setForm((f) => ({ ...f, [k]: v }));
 
   const handleConfirm = () => {
-    const num = generateOrderNumber();
-    setOrderNumber(num);
-    clearCart();
-    setStep("confirmation");
-  };
-
-  const copyOrder = () => {
-    navigator.clipboard.writeText(orderNumber);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    if (!items.length) return;
+    const lines = items.map(({ product, quantity }) => `${product.subtitle} × ${quantity} — ${formatPrice(product.price * quantity)}`);
+    const message = `Hello BATHAE, I'd like to enquire about an order:\n\n${lines.join("\n")}\nSubtotal: ${formatPrice(subtotal)} (shipping to be confirmed)\n\nName: ${form.firstName} ${form.lastName}\nPhone: ${form.phone}\nEmail: ${form.email || "Not provided"}\nDelivery: ${form.address}, ${form.city}, ${form.province} ${form.postalCode}\nPreferred payment: ${form.paymentMethod}\nNotes: ${form.notes || "None"}\n\nPlease confirm availability, delivery costs and payment details.`;
+    window.open(`https://wa.me/${BRAND_CONFIG.whatsappNumber}?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
   };
 
   const STEPS: { id: Step; label: string }[] = [
@@ -75,90 +60,6 @@ export default function CheckoutPage() {
   ];
 
   const currentIdx = STEPS.findIndex((s) => s.id === step);
-
-  if (step === "confirmation") {
-    return (
-      <main className="pt-20 min-h-screen bg-stone-50 flex items-center justify-center px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="max-w-lg w-full text-center py-20"
-        >
-          <div className="flex justify-center mb-8">
-            <CheckCircle2 size={64} className="text-emerald-500" strokeWidth={1.5} />
-          </div>
-          <p className="text-[11px] text-amber-500 tracking-[0.3em] uppercase font-medium mb-3">
-            Order Placed
-          </p>
-          <h1 className="text-4xl font-light text-stone-900 mb-4">Thank You</h1>
-          <p className="text-stone-500 mb-8 leading-relaxed">
-            Your order has been received. Our team will contact you shortly to confirm delivery
-            details.
-          </p>
-
-          <div className="bg-white border border-stone-200 p-6 mb-8">
-            <p className="text-xs text-stone-400 tracking-widest uppercase mb-2">Order Number</p>
-            <div className="flex items-center justify-center gap-3">
-              <p className="text-2xl font-mono font-semibold text-stone-900">{orderNumber}</p>
-              <button onClick={copyOrder} className="text-stone-400 hover:text-stone-700">
-                <Copy size={16} />
-              </button>
-            </div>
-            {copied && <p className="text-xs text-emerald-500 mt-2">Copied!</p>}
-          </div>
-
-          {form.paymentMethod === "jazzcash" && (
-            <div className="bg-red-50 border border-red-200 p-5 mb-6 text-left">
-              <p className="text-sm font-semibold text-red-800 mb-2">JazzCash Payment</p>
-              <p className="text-sm text-red-700">
-                Please send payment to our JazzCash account. Include your order number{" "}
-                <strong>{orderNumber}</strong> in the reference. Our team will verify and confirm.
-              </p>
-            </div>
-          )}
-
-          {form.paymentMethod === "easypaisa" && (
-            <div className="bg-green-50 border border-green-200 p-5 mb-6 text-left">
-              <p className="text-sm font-semibold text-green-800 mb-2">Easypaisa Payment</p>
-              <p className="text-sm text-green-700">
-                Please send payment to our Easypaisa account. Include your order number{" "}
-                <strong>{orderNumber}</strong> in the reference. Our team will verify and confirm.
-              </p>
-            </div>
-          )}
-
-          {form.paymentMethod === "cod" && (
-            <div className="bg-stone-100 border border-stone-200 p-5 mb-6 text-left">
-              <p className="text-sm font-semibold text-stone-800 mb-2">Cash on Delivery</p>
-              <p className="text-sm text-stone-600">
-                Payment will be collected upon delivery. Our team will contact you to arrange a
-                delivery time.
-              </p>
-            </div>
-          )}
-
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link
-              href="/shop"
-              className="inline-flex items-center justify-center bg-stone-900 text-white px-8 py-4 text-sm font-medium tracking-widest uppercase hover:bg-stone-700 transition-colors"
-            >
-              Continue Shopping
-            </Link>
-            <a
-              href={`https://wa.me/${BRAND_CONFIG.whatsappNumber}?text=${encodeURIComponent(
-                `Hi, I placed an order (${orderNumber}). Can you confirm the details?`
-              )}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center border border-stone-200 text-stone-700 px-8 py-4 text-sm font-medium tracking-widest uppercase hover:border-stone-400 transition-colors"
-            >
-              WhatsApp Us
-            </a>
-          </div>
-        </motion.div>
-      </main>
-    );
-  }
 
   return (
     <main className="pt-20 min-h-screen bg-stone-50">
@@ -172,9 +73,11 @@ export default function CheckoutPage() {
             <ChevronRight size={12} />
             <span className="text-stone-700">Checkout</span>
           </nav>
-          <h1 className="text-4xl font-light text-stone-900">Checkout</h1>
+          <h1 className="text-4xl font-light text-stone-900">Order enquiry</h1>
+          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-stone-500">Review your details and send them to our team on WhatsApp. No order or payment is processed on this website; we will confirm availability, shipping and payment with you directly.</p>
         </div>
 
+        {items.length === 0 ? <div className="rounded-2xl border border-stone-200 bg-white p-8"><p className="mb-4 text-stone-600">Your bag is empty.</p><Link href="/shop" className="button-luxe button-dark">Explore collection</Link></div> : <>
         {/* Step Indicator */}
         <div className="flex items-center gap-0 mb-12 overflow-x-auto">
           {STEPS.map((s, i) => (
@@ -293,7 +196,7 @@ export default function CheckoutPage() {
                   <PaymentOption
                     id="jazzcash"
                     label="JazzCash"
-                    description="Mobile wallet payment via JazzCash. You will receive payment details after placing the order."
+                    description="Ask our team about JazzCash details when confirming your order."
                     selected={form.paymentMethod === "jazzcash"}
                     onSelect={() => update("paymentMethod", "jazzcash")}
                     icon="🔴"
@@ -301,7 +204,7 @@ export default function CheckoutPage() {
                   <PaymentOption
                     id="easypaisa"
                     label="Easypaisa"
-                    description="Mobile wallet payment via Easypaisa. You will receive payment details after placing the order."
+                    description="Ask our team about Easypaisa details when confirming your order."
                     selected={form.paymentMethod === "easypaisa"}
                     onSelect={() => update("paymentMethod", "easypaisa")}
                     icon="🟢"
@@ -310,7 +213,7 @@ export default function CheckoutPage() {
 
                 <p className="mt-6 text-xs text-stone-400 leading-relaxed">
                   * JazzCash and Easypaisa payments are processed manually. Our team will send you
-                  account details to complete the transfer after order placement.
+                  account details if available when they confirm your request. Do not transfer money until you speak with the team.
                 </p>
 
                 <div className="mt-8 flex justify-between">
@@ -361,9 +264,10 @@ export default function CheckoutPage() {
                     onClick={handleConfirm}
                     className="bg-amber-500 text-stone-950 px-8 py-4 text-sm font-semibold tracking-widest uppercase hover:bg-amber-400 transition-colors"
                   >
-                    Place Order
+                    Continue in WhatsApp
                   </button>
                 </div>
+                <p className="mt-4 text-xs text-stone-500">This opens WhatsApp with your order request ready to send. Nothing is submitted or charged on this page.</p>
               </motion.div>
             )}
           </div>
@@ -410,6 +314,7 @@ export default function CheckoutPage() {
             </div>
           </div>
         </div>
+        </>}
       </div>
     </main>
   );

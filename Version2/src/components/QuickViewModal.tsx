@@ -45,7 +45,7 @@ export default function QuickViewModal({ product, isOpen, onClose }: QuickViewMo
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               transition={{ duration: 0.25 }}
-              className="bg-white w-full max-w-3xl relative overflow-hidden shadow-2xl"
+              className="bg-white w-full max-w-3xl relative overflow-hidden rounded-[1.5rem] shadow-2xl max-h-[90dvh] overflow-y-auto"
             >
               <button
                 onClick={onClose}
@@ -62,7 +62,7 @@ export default function QuickViewModal({ product, isOpen, onClose }: QuickViewMo
                       src={product.images[activeImg]}
                       alt={product.name}
                       fill
-                      className="object-contain p-10"
+                      className="object-contain p-10 mix-blend-multiply"
                     />
                   </div>
                   {product.images.length > 1 && (

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCartStore } from "@/store/cart";
 import { AnimatePresence, motion } from "framer-motion";
-import { ShoppingBag, Search, Menu, X } from "lucide-react";
+import { ShoppingBag, Search, Menu, X, ChevronDown } from "lucide-react";
 import SafeImage from "@/components/SafeImage";
 
 const navLinks = [
@@ -53,29 +53,36 @@ export default function Header() {
 
   return (
     <>
-      <header className="fixed inset-x-0 top-0 z-50 border-b border-stone-200 bg-white/95 text-stone-900 shadow-sm backdrop-blur-md">
+      <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-[#10110f]/95 text-white shadow-[0_8px_30px_rgba(0,0,0,.12)] backdrop-blur-xl">
         <div className="mx-auto max-w-screen-xl px-6 lg:px-12">
           <div className="flex h-20 items-center justify-between">
             <Link href="/" aria-label="BATHAE home" className="flex flex-shrink-0 items-center">
-              <span className="relative block h-10 w-36">
+              <span className="relative block h-9 w-36 overflow-hidden">
                 <SafeImage
                   src="/logo.png"
                   alt="BATHAE"
                   fill
                   priority
                   fallbackKind="logo"
-                  className="object-contain object-left"
+                  className="object-contain object-left mix-blend-screen"
                   sizes="144px"
                 />
               </span>
             </Link>
 
             <nav aria-label="Main navigation" className="hidden items-center gap-8 lg:flex xl:gap-10">
-              {navLinks.map((link) => (
+              {navLinks.map((link) => link.href === "/collections" ? (
+                <div key={link.href} className="group relative flex h-20 items-center">
+                  <Link href={link.href} className="flex items-center gap-1 text-[11px] font-medium uppercase tracking-[0.16em] text-white/70 transition-colors hover:text-[#e3bc78] focus-visible:text-[#e3bc78]">Collections <ChevronDown size={13} className="transition-transform group-hover:rotate-180 group-focus-within:rotate-180" /></Link>
+                  <div className="invisible absolute left-1/2 top-[calc(100%-2px)] w-60 -translate-x-1/2 translate-y-2 rounded-2xl border border-white/10 bg-[#1d1e1b]/95 p-3 opacity-0 shadow-2xl backdrop-blur-2xl transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
+                    {[["Brushed Gold", "gold"], ["Polished Chrome", "chrome"], ["Matte Black", "matte-black"]].map(([label, finish]) => <Link key={finish} href={`/shop?finish=${finish}`} className="block rounded-xl px-4 py-3 text-sm text-white/75 transition-colors hover:bg-white/10 hover:text-[#e3bc78]">{label}</Link>)}
+                  </div>
+                </div>
+              ) : (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="text-[12px] font-semibold uppercase tracking-[0.14em] text-stone-700 transition-colors hover:text-amber-700 focus-visible:text-amber-800"
+                  className="text-[11px] font-medium uppercase tracking-[0.16em] text-white/70 transition-colors hover:text-[#e3bc78] focus-visible:text-[#e3bc78]"
                 >
                   {link.label}
                 </Link>
@@ -86,7 +93,7 @@ export default function Header() {
               <button
                 type="button"
                 onClick={() => setSearchOpen(true)}
-                className="rounded-full p-2.5 text-stone-700 transition-colors hover:bg-stone-100 hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-600"
+                className="rounded-full p-2.5 text-white/75 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
                 aria-label="Open product search"
               >
                 <Search size={20} aria-hidden="true" />
@@ -94,7 +101,7 @@ export default function Header() {
               <button
                 type="button"
                 onClick={toggleCart}
-                className="relative rounded-full p-2.5 text-stone-700 transition-colors hover:bg-stone-100 hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-600"
+                className="relative rounded-full p-2.5 text-white/75 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
                 aria-label={`Open shopping cart${itemCount > 0 ? `, ${itemCount} items` : ""}`}
               >
                 <ShoppingBag size={20} aria-hidden="true" />
@@ -107,7 +114,7 @@ export default function Header() {
               <button
                 type="button"
                 onClick={() => setMenuOpen(true)}
-                className="rounded-full p-2.5 text-stone-700 transition-colors hover:bg-stone-100 hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-600 lg:hidden"
+                className="rounded-full p-2.5 text-white/75 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 lg:hidden"
                 aria-label="Open navigation menu"
                 aria-expanded={menuOpen}
                 aria-controls="mobile-navigation"
@@ -185,13 +192,13 @@ export default function Header() {
             <div className="flex h-full flex-col px-8 py-8">
               <div className="mb-12 flex items-center justify-between sm:mb-16">
                 <Link href="/" onClick={() => setMenuOpen(false)} aria-label="BATHAE home">
-                  <span className="relative block h-9 w-32 rounded bg-white px-1">
+                  <span className="relative block h-9 w-32 overflow-hidden">
                     <SafeImage
                       src="/logo.png"
                       alt="BATHAE"
                       fill
                       fallbackKind="logo"
-                      className="object-contain object-left"
+                      className="object-contain object-left mix-blend-screen"
                       sizes="128px"
                     />
                   </span>
@@ -206,7 +213,7 @@ export default function Header() {
                 </button>
               </div>
 
-              <nav aria-label="Mobile navigation links" className="flex flex-1 flex-col gap-7">
+              <nav aria-label="Mobile navigation links" className="flex flex-1 flex-col gap-7 overflow-y-auto">
                 {navLinks.map((link, index) => (
                   <motion.div
                     key={link.href}

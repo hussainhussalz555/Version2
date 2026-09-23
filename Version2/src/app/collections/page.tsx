@@ -14,7 +14,7 @@ const COLLECTIONS = [
     description:
       "The Matte Black collection presents a bold, fingerprint-resistant finish applied over a solid brass body. Architectural in character, these fittings work with any modern interior.",
     href: "/shop?finish=matte-black",
-    image: "/products/product1.png",
+    image: "/products/product3.png",
     bg: "bg-stone-950",
     text: "text-white",
   },
@@ -25,7 +25,7 @@ const COLLECTIONS = [
     description:
       "The Brushed Gold collection applies a warm, PVD-bonded finish to the same precision-engineered brass components. Enduring in character, never ostentatious.",
     href: "/shop?finish=gold",
-    image: "/products/product2.png",
+    image: "/products/product1.png",
     bg: "bg-amber-50",
     text: "text-stone-900",
   },
@@ -36,7 +36,7 @@ const COLLECTIONS = [
     description:
       "The Polished Chrome collection is the timeless choice — a reflective, clean surface that complements any interior and maintains its appearance with simple care.",
     href: "/shop?finish=chrome",
-    image: "/products/product3.png",
+    image: "/products/product2.png",
     bg: "bg-stone-100",
     text: "text-stone-900",
   },
@@ -114,12 +114,12 @@ export default function CollectionsPage() {
                   </Link>
                 </div>
 
-                <div className={`relative aspect-square ${i % 2 === 1 ? "md:order-1" : ""}`}>
+                <div className={`relative aspect-square overflow-hidden rounded-[2rem] bg-[#f5f3ee] shadow-[0_24px_60px_rgba(0,0,0,.12)] ${i % 2 === 1 ? "md:order-1" : ""}`}>
                   <SafeImage
                     src={col.image}
                     alt={col.label}
                     fill
-                    className="object-contain p-12"
+                    className="object-contain p-5 mix-blend-multiply transition-transform duration-700 hover:scale-105 sm:p-12"
                   />
                 </div>
               </div>
@@ -152,12 +152,12 @@ export default function CollectionsPage() {
               transition={{ delay: i * 0.1 }}
             >
               <Link href={`/products/${product.slug}`} className="group block">
-                <div className="relative aspect-square bg-stone-100 border border-stone-200 mb-4 overflow-hidden">
+                <div className="relative aspect-square bg-[#f5f3ee] border border-stone-200 mb-4 overflow-hidden rounded-2xl">
                   <SafeImage
                     src={product.images[0]}
                     alt={product.name}
                     fill
-                    className="object-contain p-10 transition-transform duration-500 group-hover:scale-105"
+                    className="object-contain p-10 mix-blend-multiply transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>
                 <p className="text-[11px] text-stone-400 tracking-widest uppercase mb-1">
