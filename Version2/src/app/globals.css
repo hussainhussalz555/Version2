@@ -92,6 +92,8 @@ body { overflow-x: clip; background: #f7f5f0; }
 .button-dark:hover { background: #3b4138; box-shadow: 0 18px 38px #15171435; }
 .button-outline { color: #292823; border: 1px solid #887e70; background: #fff6; }
 .button-outline:hover { background: #fff; }
+.button-outline-light { color: #fff; border: 1px solid rgba(255,255,255,.28); background: rgba(255,255,255,.05); backdrop-filter: blur(8px); }
+.button-outline-light:hover { background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.5); }
 .home-hero { background-image: radial-gradient(ellipse at 80% 45%,#64503946 0%,transparent 53%), linear-gradient(135deg,#171a18,#0a0b0a 72%); }
 .hero-orbit { position:absolute; width:min(75vw,850px); aspect-ratio:1; top:50%; right:-15%; transform:translateY(-50%) rotate(-27deg); border-radius:50%; border:1px solid #d9bb8224; box-shadow:0 0 0 70px #d9bb8206,0 0 0 160px #d9bb8205, inset 0 0 120px #a9855112; pointer-events:none; }
 .hero-orbit::after { content:""; position:absolute; inset:13%; border-radius:50%; border:1px solid #d9bb821c; }
@@ -114,4 +116,98 @@ main :is(button,a)[class*="bg-stone-950"][class*="px-"]:hover,
 main :is(button,a)[class*="bg-amber-500"][class*="px-"]:hover { transform:translateY(-2px); box-shadow:0 16px 35px #1c191738; }
 @media (prefers-reduced-motion:reduce) {
   .button-luxe:hover,.finish-card:hover,main :is(button,a)[class*="bg-stone-900"][class*="px-"]:hover { transform:none; }
+}
+
+/* ============================================================
+   BATHAE premium design system v2 — glass, 3-D, motion, polish
+   ============================================================ */
+
+/* Gold gradient wordmark text */
+.text-gold-gradient {
+  background: linear-gradient(100deg,#f8eccb 0%,#e3c389 38%,#c9a76b 70%,#a9783f 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Glass surfaces */
+.glass {
+  background: rgba(255,255,255,0.55);
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  border: 1px solid rgba(255,255,255,0.6);
+}
+.glass-dark {
+  background: rgba(20,22,19,0.6);
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Soft, layered elevation */
+.elevate { box-shadow: 0 30px 70px -30px rgba(40,32,20,.28); }
+.elevate-lg { box-shadow: 0 50px 90px -40px rgba(40,32,20,.4); }
+
+/* Hover lift for cards */
+.lift { transition: transform .55s cubic-bezier(.2,.8,.2,1), box-shadow .55s ease; }
+.lift:hover { transform: translateY(-8px); box-shadow: 0 44px 70px -30px rgba(40,32,20,.32); }
+
+/* Animated nav underline */
+.nav-link { position: relative; }
+.nav-link::after {
+  content: ""; position: absolute; left: 0; bottom: -7px; height: 1px; width: 100%;
+  background: linear-gradient(90deg, transparent, #e3bc78, transparent);
+  transform: scaleX(0); transform-origin: center; transition: transform .45s ease;
+}
+.nav-link:hover::after, .nav-link:focus-visible::after { transform: scaleX(1); }
+
+/* Eyebrow with gold dot */
+.eyebrow-dot::before {
+  content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 999px;
+  background: #c9a76b; margin-right: 11px; vertical-align: middle;
+}
+
+/* Aurora glow for dark sections */
+.aurora { position: relative; overflow: hidden; }
+.aurora::before {
+  content: ""; position: absolute; width: 60vw; height: 60vw; left: -10vw; top: -22vw;
+  background: radial-gradient(circle, rgba(201,167,107,.18), transparent 60%);
+  filter: blur(40px); pointer-events: none;
+}
+
+/* Shimmer for image loading */
+@keyframes shimmer { 100% { background-position: -200% 0; } }
+.shimmer {
+  background: linear-gradient(110deg,#ececec 8%,#f6f6f6 18%,#ececec 33%);
+  background-size: 200% 100%; animation: shimmer 1.4s linear infinite;
+}
+
+/* Marquee */
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.animate-marquee { animation: marquee 32s linear infinite; }
+.marquee-paused:hover .animate-marquee { animation-play-state: paused; }
+
+/* Gentle float */
+@keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+.animate-floaty { animation: floaty 7s ease-in-out infinite; }
+
+/* Pulsing halo for the WhatsApp CTA */
+@keyframes halo { 0% { transform: scale(1); opacity: .55; } 70%,100% { transform: scale(1.9); opacity: 0; } }
+.animate-halo::after {
+  content: ""; position: absolute; inset: 0; border-radius: 999px;
+  background: #25D366; animation: halo 2.6s cubic-bezier(.4,0,.2,1) infinite;
+}
+
+/* Custom scrollbar */
+html { scrollbar-color: #c9a76b #efece5; }
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: #efece5; }
+::-webkit-scrollbar-thumb { background: #cbb187; border-radius: 999px; border: 2px solid #efece5; }
+::-webkit-scrollbar-thumb:hover { background: #b3935f; }
+
+/* Header morphs on scroll (see Header.tsx) */
+.site-header { transition: background-color .5s ease, backdrop-filter .5s ease, box-shadow .5s ease, border-color .5s ease; }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee, .animate-floaty, .animate-halo::after { animation: none !important; }
 }

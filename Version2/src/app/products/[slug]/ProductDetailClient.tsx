@@ -18,6 +18,7 @@ import type { Product } from "@/lib/products";
 import { formatPrice, getStockLabel } from "@/lib/products";
 import { useCartStore } from "@/store/cart";
 import ProductCard from "@/components/ProductCard";
+import Reveal from "@/components/Reveal";
 import { BRAND_CONFIG } from "@/lib/config";
 
 interface Props {
@@ -188,7 +189,7 @@ export default function ProductDetailClient({ product, related }: Props) {
               <button
                 onClick={handleAddToCart}
                 disabled={product.stock === 0}
-                className="w-full bg-stone-900 text-white py-4 text-sm font-medium tracking-widest uppercase flex items-center justify-center gap-2 hover:bg-stone-700 transition-colors disabled:opacity-40"
+                className="button-luxe button-dark w-full justify-center disabled:opacity-40"
               >
                 <ShoppingBag size={16} />
                 Add to Cart
@@ -196,7 +197,7 @@ export default function ProductDetailClient({ product, related }: Props) {
               <button
                 onClick={handleBuyNow}
                 disabled={product.stock === 0}
-                className="w-full bg-amber-500 text-stone-950 py-4 text-sm font-semibold tracking-widest uppercase hover:bg-amber-400 transition-colors disabled:opacity-40"
+                className="button-luxe button-gold w-full justify-center disabled:opacity-40"
               >
                 Buy Now
               </button>
@@ -204,7 +205,7 @@ export default function ProductDetailClient({ product, related }: Props) {
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full border border-stone-200 text-stone-700 py-4 text-sm font-medium tracking-widest uppercase flex items-center justify-center gap-2 hover:border-stone-400 hover:text-stone-900 transition-colors"
+                className="button-luxe button-outline w-full justify-center"
               >
                 <MessageCircle size={16} />
                 Enquire on WhatsApp
@@ -332,16 +333,18 @@ export default function ProductDetailClient({ product, related }: Props) {
 
         {/* ── Related Products ── */}
         {related.length > 0 && (
-          <div className="mt-20 border-t border-stone-200 pt-16">
-            <h2 className="text-3xl font-light text-stone-900 mb-12">
-              You May Also Like
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {related.map((p) => (
-                <ProductCard key={p.id} product={p} />
-              ))}
+          <Reveal>
+            <div className="mt-20 border-t border-stone-200 pt-16">
+              <h2 className="text-3xl font-light text-stone-900 mb-12">
+                You May Also Like
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                {related.map((p) => (
+                  <ProductCard key={p.id} product={p} />
+                ))}
+              </div>
             </div>
-          </div>
+          </Reveal>
         )}
       </div>
 

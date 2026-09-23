@@ -12,9 +12,11 @@ export default function SafeImage({
   src,
   alt,
   fallbackKind = "product",
+  className = "",
   ...imageProps
 }: SafeImageProps) {
   const [failedSource, setFailedSource] = useState<ImageProps["src"] | null>(null);
+  const [loaded, setLoaded] = useState(false);
 
   if (failedSource === src) {
     return fallbackKind === "logo" || fallbackKind === "logo-light" ? (
@@ -38,11 +40,21 @@ export default function SafeImage({
   }
 
   return (
-    <Image
-      {...imageProps}
-      src={src}
-      alt={alt}
-      onError={() => setFailedSource(src)}
-    />
+    <>
+      <Image
+        {...imageProps}
+        src={src}
+        alt={alt}
+        onError={() => setFailedSource(src)}
+        onLoad={() => setLoaded(true)}
+        className={className}
+      />
+      {!loaded && (
+        <div
+          aria-hidden="true"
+          className="shimmer pointer-events-none absolute inset-0 rounded-[inherit]"
+        />
+      )}
+    </>
   );
 }
