@@ -182,10 +182,46 @@ main :is(button,a)[class*="bg-amber-500"][class*="px-"]:hover { transform:transl
   background-size: 200% 100%; animation: shimmer 1.4s linear infinite;
 }
 
-/* Marquee */
+/* ── Live news ticker — brushed gold, polished finish ── */
 @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-.animate-marquee { animation: marquee 32s linear infinite; }
-.marquee-paused:hover .animate-marquee { animation-play-state: paused; }
+.ticker-track { animation: marquee 24s linear infinite; will-change: transform; }
+
+/* Brushed-gold bar: fine horizontal brushing over a polished gold gradient */
+.news-ticker {
+  position: relative;
+  background:
+    repeating-linear-gradient(180deg, rgba(255,255,255,.05) 0 1px, rgba(0,0,0,0) 1px 3px),
+    linear-gradient(180deg, #f8eccb 0%, #eed9a8 26%, #dcbd82 52%, #c8a66a 76%, #e9d4a4 100%);
+  border-top: 1px solid #8a6a3b;
+  border-bottom: 1px solid #8a6a3b;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.6), inset 0 -1px 0 rgba(96,70,28,.4), 0 18px 40px -22px rgba(64,46,14,.55);
+  overflow: hidden;
+}
+
+/* Polished glint sweeping across the bar */
+.news-ticker::after {
+  content: "";
+  position: absolute;
+  top: -12%;
+  bottom: -12%;
+  left: 0;
+  width: 34%;
+  z-index: 1;
+  background: linear-gradient(105deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.32) 42%, rgba(255,255,255,.55) 50%, rgba(255,255,255,.32) 58%, rgba(255,255,255,0) 100%);
+  transform: translateX(-150%) skewX(-18deg);
+  animation: ticker-glint 6.5s cubic-bezier(.45,0,.25,1) infinite;
+  pointer-events: none;
+}
+@keyframes ticker-glint {
+  0%, 52% { transform: translateX(-150%) skewX(-18deg); }
+  100% { transform: translateX(420%) skewX(-18deg); }
+}
+
+/* Soft edge fades where headlines enter and leave */
+.ticker-viewport {
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 30px, #000 calc(100% - 30px), transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 30px, #000 calc(100% - 30px), transparent 100%);
+}
 
 /* Gentle float */
 @keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
@@ -209,5 +245,6 @@ html { scrollbar-color: #c9a76b #efece5; }
 .site-header { transition: background-color .5s ease, backdrop-filter .5s ease, box-shadow .5s ease, border-color .5s ease; }
 
 @media (prefers-reduced-motion: reduce) {
-  .animate-marquee, .animate-floaty, .animate-halo::after { animation: none !important; }
+  .ticker-track, .animate-floaty, .animate-halo::after { animation: none !important; }
+  .news-ticker::after { animation: none !important; display: none; }
 }

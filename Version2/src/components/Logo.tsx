@@ -1,76 +1,44 @@
-"use client";
-
 import Link from "next/link";
-import { useId } from "react";
+import Image from "next/image";
 
 type LogoProps = {
   className?: string;
   onClick?: () => void;
+  /** Kept for API compatibility — the brand mark is now the PNG asset. */
   tone?: "light" | "dark";
+  /** Kept for API compatibility — the brand mark is now the PNG asset. */
   mark?: boolean;
   size?: "sm" | "md" | "lg";
 };
 
 /**
- * BATHAE wordmark. Rendered as a transparent, color-correct mark so it sits
- * cleanly on both the dark header and the dark footer (no blend-mode hacks).
+ * BATHAE logo — the owner's brand mark from public/logo.png, rendered via a
+ * transparent derivative (public/logo-transparent.png: identical artwork with
+ * the baked-in black background keyed out) so it sits cleanly on the dark
+ * header, mobile menu, and footer without a visible black box.
  */
-export default function Logo({
-  className = "",
-  onClick,
-  tone = "light",
-  mark = true,
-  size = "md",
-}: LogoProps) {
-  const raw = useId();
-  const gradId = `logoGrad-${raw.replace(/[:]/g, "")}`;
-  const word = tone === "light" ? "text-stone-50" : "text-stone-900";
-  const dim = size === "sm" ? "text-xl" : size === "lg" ? "text-3xl" : "text-2xl";
-  const markSize = size === "sm" ? 22 : size === "lg" ? 32 : 26;
+const SIZES = { sm: 30, md: 38, lg: 48 } as const;
+const ASPECT = 979 / 215;
+
+export default function Logo({ className = "", onClick, size = "md" }: LogoProps) {
+  const height = SIZES[size];
+  const width = Math.round(height * ASPECT);
 
   return (
     <Link
       href="/"
       onClick={onClick}
       aria-label="BATHAE — home"
-      className={`group inline-flex items-center gap-2.5 ${className}`}
+      className={`group inline-flex flex-shrink-0 items-center ${className}`}
     >
-      {mark && (
-        <span
-          className="relative inline-flex items-center justify-center transition-transform duration-500 ease-out group-hover:rotate-[10deg] group-hover:scale-110"
-          aria-hidden="true"
-        >
-          <svg width={markSize} height={markSize} viewBox="0 0 28 32" fill="none">
-            <defs>
-              <linearGradient
-                id={gradId}
-                x1="3"
-                y1="1"
-                x2="25"
-                y2="31"
-                gradientUnits="userSpaceOnUse"
-              >
-                <stop stopColor="#f8eccb" />
-                <stop offset="0.5" stopColor="#dcbb7c" />
-                <stop offset="1" stopColor="#a9783f" />
-              </linearGradient>
-            </defs>
-            <path d="M14 1 L27 12 L14 31 L1 12 Z" fill={`url(#${gradId})`} />
-            <path
-              d="M14 1 L27 12 L14 31 L1 12 Z"
-              fill="none"
-              stroke="rgba(255,255,255,0.4)"
-              strokeWidth="0.6"
-            />
-            <path d="M14 7 L21 12 L14 25 L7 12 Z" fill="rgba(255,255,255,0.18)" />
-          </svg>
-        </span>
-      )}
-      <span
-        className={`font-display font-semibold tracking-[0.2em] ${word} ${dim}`}
-      >
-        BATHAE
-      </span>
+      <Image
+        src="/logo-transparent.png"
+        alt="BATHAE"
+        width={width}
+        height={height}
+        priority={size === "sm"}
+        className="drop-shadow-[0_2px_16px_rgba(201,167,107,0.22)] transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+      />
     </Link>
   );
 }
