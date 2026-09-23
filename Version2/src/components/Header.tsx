@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useCartStore } from "@/store/cart";
 import { AnimatePresence, motion } from "framer-motion";
 import { ShoppingBag, Search, Menu, X, ChevronDown } from "lucide-react";
-import SafeImage from "@/components/SafeImage";
+import Logo from "@/components/Logo";
 
 const navLinks = [
   { href: "/collections", label: "Collections" },
@@ -20,6 +20,7 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [scrolled, setScrolled] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const toggleCart = useCartStore((state) => state.toggleCart);
@@ -30,8 +31,14 @@ export default function Header() {
   }, [searchOpen]);
 
   useEffect(() => {
-    if (!searchOpen && !menuOpen) return;
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
+  useEffect(() => {
+    if (!searchOpen && !menuOpen) return;
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setSearchOpen(false);
@@ -53,40 +60,59 @@ export default function Header() {
 
   return (
     <>
-      <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-[#10110f]/95 text-white shadow-[0_8px_30px_rgba(0,0,0,.12)] backdrop-blur-xl">
+      <header
+        className={`site-header fixed inset-x-0 top-0 z-50 text-white ${
+          scrolled
+            ? "border-b border-white/10 bg-[#10110f]/85 shadow-[0_10px_40px_rgba(0,0,0,0.32)] backdrop-blur-xl"
+            : "border-b border-transparent bg-[#10110f]/55 backdrop-blur-md"
+        }`}
+      >
         <div className="mx-auto max-w-screen-xl px-6 lg:px-12">
-          <div className="flex h-20 items-center justify-between">
+          <div
+            className={`flex items-center justify-between transition-[height] duration-500 ${
+              scrolled ? "h-16" : "h-20"
+            }`}
+          >
             <Link href="/" aria-label="BATHAE home" className="flex flex-shrink-0 items-center">
-              <span className="relative block h-9 w-36 overflow-hidden">
-                <SafeImage
-                  src="/logo.png"
-                  alt="BATHAE"
-                  fill
-                  priority
-                  fallbackKind="logo"
-                  className="object-contain object-left mix-blend-screen"
-                  sizes="144px"
-                />
-              </span>
+              <Logo size="sm" />
             </Link>
 
             <nav aria-label="Main navigation" className="hidden items-center gap-8 lg:flex xl:gap-10">
-              {navLinks.map((link) => link.href === "/collections" ? (
-                <div key={link.href} className="group relative flex h-20 items-center">
-                  <Link href={link.href} className="flex items-center gap-1 text-[11px] font-medium uppercase tracking-[0.16em] text-white/70 transition-colors hover:text-[#e3bc78] focus-visible:text-[#e3bc78]">Collections <ChevronDown size={13} className="transition-transform group-hover:rotate-180 group-focus-within:rotate-180" /></Link>
-                  <div className="invisible absolute left-1/2 top-[calc(100%-2px)] w-60 -translate-x-1/2 translate-y-2 rounded-2xl border border-white/10 bg-[#1d1e1b]/95 p-3 opacity-0 shadow-2xl backdrop-blur-2xl transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
-                    {[["Brushed Gold", "gold"], ["Polished Chrome", "chrome"], ["Matte Black", "matte-black"]].map(([label, finish]) => <Link key={finish} href={`/shop?finish=${finish}`} className="block rounded-xl px-4 py-3 text-sm text-white/75 transition-colors hover:bg-white/10 hover:text-[#e3bc78]">{label}</Link>)}
+              {navLinks.map((link) =>
+                link.href === "/collections" ? (
+                  <div key={link.href} className="group relative flex h-20 items-center">
+                    <Link
+                      href={link.href}
+                      className="nav-link flex items-center gap-1 text-[11px] font-medium uppercase tracking-[0.16em] text-white/70 transition-colors hover:text-[#e3bc78] focus-visible:text-[#e3bc78]"
+                    >
+                      Collections <ChevronDown size={13} className="transition-transform group-hover:rotate-180 group-focus-within:rotate-180" />
+                    </Link>
+                    <div className="invisible absolute left-1/2 top-[calc(100%-2px)] w-60 -translate-x-1/2 translate-y-2 rounded-2xl border border-white/10 bg-[#1d1e1b]/95 p-3 opacity-0 shadow-2xl backdrop-blur-2xl transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
+                      {[
+                        ["Brushed Gold", "gold"],
+                        ["Polished Chrome", "chrome"],
+                        ["Matte Black", "matte-black"],
+                      ].map(([label, finish]) => (
+                        <Link
+                          key={finish}
+                          href={`/shop?finish=${finish}`}
+                          className="block rounded-xl px-4 py-3 text-sm text-white/75 transition-colors hover:bg-white/10 hover:text-[#e3bc78]"
+                        >
+                          {label}
+                        </Link>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              ) : (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="text-[11px] font-medium uppercase tracking-[0.16em] text-white/70 transition-colors hover:text-[#e3bc78] focus-visible:text-[#e3bc78]"
-                >
-                  {link.label}
-                </Link>
-              ))}
+                ) : (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="nav-link text-[11px] font-medium uppercase tracking-[0.16em] text-white/70 transition-colors hover:text-[#e3bc78] focus-visible:text-[#e3bc78]"
+                  >
+                    {link.label}
+                  </Link>
+                )
+              )}
             </nav>
 
             <div className="flex items-center gap-1 sm:gap-2">
@@ -106,9 +132,15 @@ export default function Header() {
               >
                 <ShoppingBag size={20} aria-hidden="true" />
                 {itemCount > 0 && (
-                  <span className="absolute right-0 top-0 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-amber-600 px-1 text-[10px] font-bold leading-none text-white">
+                  <motion.span
+                    key={itemCount}
+                    initial={{ scale: 0.4 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: "spring", stiffness: 500, damping: 18 }}
+                    className="absolute right-0 top-0 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-amber-500 px-1 text-[10px] font-bold leading-none text-[#1c1917]"
+                  >
                     {itemCount}
-                  </span>
+                  </motion.span>
                 )}
               </button>
               <button
@@ -147,7 +179,9 @@ export default function Header() {
               className="w-full max-w-2xl"
             >
               <form onSubmit={handleSearch} className="relative">
-                <label htmlFor="site-search" className="sr-only">Search products</label>
+                <label htmlFor="site-search" className="sr-only">
+                  Search products
+                </label>
                 <input
                   id="site-search"
                   ref={searchRef}
@@ -191,18 +225,7 @@ export default function Header() {
           >
             <div className="flex h-full flex-col px-8 py-8">
               <div className="mb-12 flex items-center justify-between sm:mb-16">
-                <Link href="/" onClick={() => setMenuOpen(false)} aria-label="BATHAE home">
-                  <span className="relative block h-9 w-32 overflow-hidden">
-                    <SafeImage
-                      src="/logo.png"
-                      alt="BATHAE"
-                      fill
-                      fallbackKind="logo"
-                      className="object-contain object-left mix-blend-screen"
-                      sizes="128px"
-                    />
-                  </span>
-                </Link>
+                <Logo onClick={() => setMenuOpen(false)} />
                 <button
                   type="button"
                   onClick={() => setMenuOpen(false)}

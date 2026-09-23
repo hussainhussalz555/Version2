@@ -2,11 +2,11 @@
 
 import { useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { motion } from "framer-motion";
 import { Search, SlidersHorizontal, X } from "lucide-react";
 import { products, CATEGORIES, FINISHES } from "@/lib/products";
 import type { Product } from "@/lib/products";
 import ProductCard from "@/components/ProductCard";
+import Reveal from "@/components/Reveal";
 
 type SortOption = "default" | "price-asc" | "price-desc" | "name-asc";
 
@@ -51,15 +51,10 @@ function ShopContent() {
       {/* Page Header */}
       <div className="bg-white border-b border-stone-200 py-16 px-6 lg:px-12">
         <div className="max-w-screen-xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            <p className="text-[11px] text-amber-500 tracking-[0.3em] uppercase font-medium mb-3">
-              Browse
-            </p>
-            <h1 className="text-5xl font-light text-stone-900">Shop All</h1>
-          </motion.div>
+          <Reveal>
+            <p className="eyebrow eyebrow-dot text-amber-600">Browse</p>
+            <h1 className="mt-3 text-5xl font-light text-stone-900">Shop All</h1>
+          </Reveal>
         </div>
       </div>
 

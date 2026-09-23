@@ -2,88 +2,68 @@
 
 import SafeImage from "@/components/SafeImage";
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
-import { BRAND_CONFIG } from "@/lib/config";
+import Reveal from "@/components/Reveal";
 
 export default function AboutPage() {
   return (
-    <main className="pt-20 min-h-screen bg-stone-50">
+    <main className="min-h-screen bg-stone-50 pt-20">
       {/* Hero */}
-      <section className="bg-stone-950 py-32 px-6 lg:px-12">
-        <div className="max-w-screen-xl mx-auto">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <p className="text-amber-400 text-[11px] tracking-[0.3em] uppercase font-medium mb-4">
-              Our Story
-            </p>
-            <h1 className="text-white text-6xl md:text-8xl font-light leading-none tracking-tight mb-8 max-w-3xl">
+      <section className="aurora relative overflow-hidden bg-stone-950 px-6 py-32 text-white lg:px-12">
+        <div className="relative mx-auto max-w-screen-xl">
+          <Reveal>
+            <p className="eyebrow eyebrow-dot text-amber-400">Our Story</p>
+            <h1 className="mt-6 max-w-3xl text-6xl font-light leading-none tracking-tight md:text-8xl">
               Design That
               <br />
               <span className="italic text-stone-400">Endures</span>
             </h1>
-            <p className="text-stone-400 max-w-xl leading-relaxed text-lg font-light">
+            <p className="mt-8 max-w-xl text-lg font-light leading-relaxed text-stone-400">
               BATHAE was built on a straightforward conviction: that the bathroom deserves the same
               level of considered design as any other room in the home.
             </p>
-          </motion.div>
+          </Reveal>
         </div>
       </section>
 
       {/* Philosophy */}
-      <section className="py-24 px-6 lg:px-12 max-w-screen-xl mx-auto">
-        <div className="grid md:grid-cols-2 gap-16 items-center">
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-          >
-            <p className="text-[11px] text-amber-500 tracking-[0.3em] uppercase font-medium mb-4">
-              Philosophy
+      <section className="px-6 py-24 lg:px-12">
+        <div className="mx-auto grid max-w-screen-xl items-center gap-16 md:grid-cols-2">
+          <Reveal x={-24}>
+            <p className="eyebrow eyebrow-dot text-amber-600">Philosophy</p>
+            <h2 className="mt-5 text-4xl font-light text-stone-900">Less, but</h2>
+            <h2 className="text-4xl font-light italic text-stone-500">Better</h2>
+            <p className="mt-6 leading-relaxed text-stone-500">
+              We do not believe in offering hundreds of SKUs for the sake of range. BATHAE focuses on
+              a curated set of products done exceptionally well. Each design goes through a rigorous
+              process of refinement before it reaches you.
             </p>
-            <h2 className="text-stone-900 text-4xl font-light mb-6">
-              Less, but
-              <br />
-              <span className="italic text-stone-500">Better</span>
-            </h2>
-            <p className="text-stone-500 leading-relaxed mb-6">
-              We do not believe in offering hundreds of SKUs for the sake of range. BATHAE focuses
-              on a curated set of products done exceptionally well. Each design goes through a
-              rigorous process of refinement before it reaches you.
-            </p>
-            <p className="text-stone-500 leading-relaxed">
+            <p className="mt-4 leading-relaxed text-stone-500">
               Our concealed shower systems are the product of that approach — complete sets where
               every component is considered, matched, and finished to the same standard.
             </p>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="relative aspect-square bg-stone-100"
-          >
-            <SafeImage
-              src="/products/product2.png"
-              alt="BATHAE Chrome Shower Set"
-              fill
-              className="object-contain p-12 mix-blend-multiply"
-            />
-          </motion.div>
+          </Reveal>
+          <Reveal x={24} delay={0.1}>
+            <div className="relative aspect-square overflow-hidden rounded-[2rem] bg-stone-100 shadow-[0_30px_70px_rgba(40,32,19,.12)]">
+              <SafeImage
+                src="/products/product2.png"
+                alt="BATHAE Chrome Shower Set"
+                fill
+                sizes="(max-width: 768px) 100vw, 45vw"
+                className="object-contain p-12 mix-blend-multiply transition-transform duration-700 hover:scale-105"
+              />
+            </div>
+          </Reveal>
         </div>
       </section>
 
       {/* Values */}
-      <section className="py-24 bg-stone-900">
-        <div className="max-w-screen-xl mx-auto px-6 lg:px-12">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-white text-4xl font-light">What We Stand For</h2>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-8">
+      <section className="bg-stone-900 py-24">
+        <div className="mx-auto max-w-screen-xl px-6 lg:px-12">
+          <Reveal className="mb-16 text-center">
+            <h2 className="text-4xl font-light text-white">What We Stand For</h2>
+          </Reveal>
+          <div className="grid gap-8 md:grid-cols-3">
             {[
               {
                 number: "01",
@@ -101,46 +81,36 @@ export default function AboutPage() {
                 body: "Premium design should not be a luxury reserved for a few. We work to make genuinely refined bathroom products accessible in Pakistan.",
               },
             ].map((v, i) => (
-              <motion.div
-                key={v.number}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="border-t border-stone-700 pt-8"
-              >
-                <p className="text-amber-400 text-4xl font-light mb-4">{v.number}</p>
-                <h3 className="text-white font-semibold mb-3">{v.title}</h3>
-                <p className="text-stone-400 text-sm leading-relaxed">{v.body}</p>
-              </motion.div>
+              <Reveal key={v.number} delay={i * 0.1}>
+                <div className="group h-full border-t border-stone-700 pt-8 transition-colors duration-300 hover:border-amber-400">
+                  <p className="mb-4 text-4xl font-light text-amber-400 transition-transform duration-300 group-hover:-translate-y-1">
+                    {v.number}
+                  </p>
+                  <h3 className="mb-3 font-semibold text-white">{v.title}</h3>
+                  <p className="text-sm leading-relaxed text-stone-400">{v.body}</p>
+                </div>
+              </Reveal>
             ))}
           </div>
         </div>
       </section>
 
       {/* CTA */}
-      <section className="py-24 px-6 lg:px-12 max-w-screen-xl mx-auto text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-        >
-          <h2 className="text-stone-900 text-5xl font-light mb-6">
+      <section className="px-6 py-24 text-center lg:px-12">
+        <Reveal className="mx-auto max-w-xl">
+          <h2 className="text-5xl font-light text-stone-900">
             Experience
             <br />
             <span className="italic text-stone-500">BATHAE</span>
           </h2>
-          <p className="text-stone-500 max-w-md mx-auto mb-10 leading-relaxed">
+          <p className="mx-auto mb-10 mt-4 max-w-md leading-relaxed text-stone-500">
             Browse our complete collection of premium concealed shower sets. Available across
             Pakistan.
           </p>
-          <Link
-            href="/shop"
-            className="inline-flex items-center gap-2 bg-stone-900 text-white px-10 py-4 text-sm font-medium tracking-widest uppercase hover:bg-stone-700 transition-colors"
-          >
+          <Link href="/shop" className="button-luxe button-dark mx-auto">
             Shop Now <ArrowRight size={15} />
           </Link>
-        </motion.div>
+        </Reveal>
       </section>
     </main>
   );

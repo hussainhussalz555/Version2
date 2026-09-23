@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import SafeImage from "@/components/SafeImage";
-import { motion } from "framer-motion";
+import Reveal from "@/components/Reveal";
+import TiltCard from "@/components/TiltCard";
 import { ArrowRight } from "lucide-react";
 import { products, formatPrice } from "@/lib/products";
 
@@ -44,55 +45,45 @@ const COLLECTIONS = [
 
 export default function CollectionsPage() {
   return (
-    <main className="pt-20 min-h-screen bg-stone-50">
+    <main className="min-h-screen bg-stone-50 pt-20">
       {/* Header */}
-      <div className="bg-white border-b border-stone-200 py-20 px-6 lg:px-12">
-        <div className="max-w-screen-xl mx-auto">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <p className="text-[11px] text-amber-500 tracking-[0.3em] uppercase font-medium mb-3">
-              Browse
-            </p>
-            <h1 className="text-5xl font-light text-stone-900">Collections</h1>
-          </motion.div>
+      <div className="border-b border-stone-200 bg-white px-6 py-20 lg:px-12">
+        <div className="mx-auto max-w-screen-xl">
+          <Reveal>
+            <p className="eyebrow eyebrow-dot text-amber-600">Browse</p>
+            <h1 className="mt-3 text-5xl font-light text-stone-900">Collections</h1>
+          </Reveal>
         </div>
       </div>
 
       {/* Collection Features */}
       <div className="space-y-0">
         {COLLECTIONS.map((col, i) => (
-          <motion.section
-            key={col.id}
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            className={`${col.bg} py-24 px-6 lg:px-12`}
-          >
-            <div className="max-w-screen-xl mx-auto">
+          <section key={col.id} className={`${col.bg} px-6 py-24 lg:px-12`}>
+            <div className="mx-auto max-w-screen-xl">
               <div
-                className={`grid md:grid-cols-2 gap-16 items-center ${
+                className={`grid items-center gap-16 md:grid-cols-2 ${
                   i % 2 === 1 ? "md:grid-flow-col-dense" : ""
                 }`}
               >
-                <div className={i % 2 === 1 ? "md:order-2" : ""}>
+                <Reveal x={i % 2 === 1 ? 24 : -24} className={i % 2 === 1 ? "md:order-2" : ""}>
                   <p
-                    className={`text-[11px] tracking-[0.3em] uppercase font-medium mb-4 ${
+                    className={`eyebrow eyebrow-dot ${
                       col.bg === "bg-stone-950" ? "text-amber-400" : "text-amber-600"
                     }`}
                   >
                     {col.subtitle}
                   </p>
-                  <h2 className={`text-5xl font-light mb-6 ${col.text}`}>{col.label}</h2>
+                  <h2 className={`mt-4 text-5xl font-light ${col.text}`}>{col.label}</h2>
                   <p
-                    className={`leading-relaxed mb-8 max-w-md ${
+                    className={`mb-8 mt-6 max-w-md leading-relaxed ${
                       col.bg === "bg-stone-950" ? "text-stone-400" : "text-stone-500"
                     }`}
                   >
                     {col.description}
                   </p>
-                  <div className="flex items-center gap-4 mb-8">
-                    <span className={`text-2xl font-light ${col.text}`}>
-                      {formatPrice(75000)}
-                    </span>
+                  <div className={`mb-8 flex items-center gap-4`}>
+                    <span className={`text-2xl font-light ${col.text}`}>{formatPrice(75000)}</span>
                     <span
                       className={`text-sm ${
                         col.bg === "bg-stone-950" ? "text-stone-500" : "text-stone-400"
@@ -103,73 +94,69 @@ export default function CollectionsPage() {
                   </div>
                   <Link
                     href={col.href}
-                    className={`inline-flex items-center gap-2 px-8 py-4 text-sm font-semibold tracking-widest uppercase group transition-colors ${
+                    className={`button-luxe ${
                       col.bg === "bg-stone-950"
-                        ? "bg-amber-500 text-stone-950 hover:bg-amber-400"
-                        : "bg-stone-900 text-white hover:bg-stone-700"
+                        ? "button-gold"
+                        : "button-dark"
                     }`}
                   >
                     Shop {col.label}
-                    <ArrowRight size={15} className="group-hover:translate-x-1 transition-transform" />
+                    <ArrowRight size={15} />
                   </Link>
-                </div>
+                </Reveal>
 
-                <div className={`relative aspect-square overflow-hidden rounded-[2rem] bg-[#f5f3ee] shadow-[0_24px_60px_rgba(0,0,0,.12)] ${i % 2 === 1 ? "md:order-1" : ""}`}>
-                  <SafeImage
-                    src={col.image}
-                    alt={col.label}
-                    fill
-                    className="object-contain p-5 mix-blend-multiply transition-transform duration-700 hover:scale-105 sm:p-12"
-                  />
-                </div>
+                <Reveal x={i % 2 === 1 ? -24 : 24} delay={0.1} className={i % 2 === 1 ? "md:order-1" : ""}>
+                  <TiltCard className="rounded-[2rem]" intensity={8}>
+                    <div className="relative aspect-square overflow-hidden rounded-[2rem] bg-[#f5f3ee] shadow-[0_24px_60px_rgba(0,0,0,.12)]">
+                      <SafeImage
+                        src={col.image}
+                        alt={col.label}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 45vw"
+                        className="object-contain p-5 mix-blend-multiply transition-transform duration-700 hover:scale-105 sm:p-12"
+                      />
+                    </div>
+                  </TiltCard>
+                </Reveal>
               </div>
             </div>
-          </motion.section>
+          </section>
         ))}
       </div>
 
       {/* All Products Grid */}
-      <section className="py-24 px-6 lg:px-12 max-w-screen-xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mb-12"
-        >
-          <h2 className="text-4xl font-light text-stone-900">
-            All
-            <span className="italic text-stone-500"> Products</span>
-          </h2>
-        </motion.div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {products.map((product, i) => (
-            <motion.div
-              key={product.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-            >
-              <Link href={`/products/${product.slug}`} className="group block">
-                <div className="relative aspect-square bg-[#f5f3ee] border border-stone-200 mb-4 overflow-hidden rounded-2xl">
-                  <SafeImage
-                    src={product.images[0]}
-                    alt={product.name}
-                    fill
-                    className="object-contain p-10 mix-blend-multiply transition-transform duration-500 group-hover:scale-105"
-                  />
-                </div>
-                <p className="text-[11px] text-stone-400 tracking-widest uppercase mb-1">
-                  {product.finish.replace("-", " ")}
-                </p>
-                <h3 className="text-stone-900 font-medium group-hover:text-stone-600 transition-colors">
-                  {product.name}
-                </h3>
-                <p className="text-stone-500 text-sm mt-0.5">{formatPrice(product.price)}</p>
-              </Link>
-            </motion.div>
-          ))}
+      <section className="px-6 py-24 lg:px-12">
+        <div className="mx-auto max-w-screen-xl">
+          <Reveal className="mb-12">
+            <h2 className="text-4xl font-light text-stone-900">
+              All
+              <span className="italic text-stone-500"> Products</span>
+            </h2>
+          </Reveal>
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+            {products.map((product, i) => (
+              <Reveal key={product.id} delay={(i % 3) * 0.1}>
+                <Link href={`/products/${product.slug}`} className="group block">
+                  <div className="relative aspect-square overflow-hidden rounded-2xl border border-stone-200 bg-[#f5f3ee] shadow-[0_12px_35px_rgba(32,27,19,.06)] transition-all duration-500 group-hover:-translate-y-1 group-hover:shadow-[0_26px_50px_rgba(32,27,19,.16)]">
+                    <SafeImage
+                      src={product.images[0]}
+                      alt={product.name}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      className="object-contain p-10 mix-blend-multiply transition-transform duration-500 group-hover:scale-105"
+                    />
+                  </div>
+                  <p className="mb-1 mt-4 text-[11px] uppercase tracking-[0.14em] text-stone-400">
+                    {product.finish.replace("-", " ")}
+                  </p>
+                  <h3 className="font-medium text-stone-900 transition-colors group-hover:text-amber-800">
+                    {product.name}
+                  </h3>
+                  <p className="mt-0.5 text-sm text-stone-500">{formatPrice(product.price)}</p>
+                </Link>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
     </main>

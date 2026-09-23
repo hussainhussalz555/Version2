@@ -134,7 +134,7 @@ export default function QuickViewModal({ product, isOpen, onClose }: QuickViewMo
                     <button
                       onClick={handleAddToCart}
                       disabled={product.stock === 0}
-                      className="w-full bg-stone-900 text-white py-4 text-sm font-medium tracking-widest uppercase flex items-center justify-center gap-2 hover:bg-stone-700 transition-colors disabled:opacity-40"
+                      className="button-luxe button-dark w-full justify-center disabled:opacity-40"
                     >
                       <ShoppingBag size={16} />
                       Add to Cart
