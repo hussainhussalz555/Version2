@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import SafeImage from "@/components/SafeImage";
 import { motion } from "framer-motion";
 import { ChevronRight, CheckCircle2, Copy } from "lucide-react";
 import { useCartStore } from "@/store/cart";
@@ -377,7 +377,7 @@ export default function CheckoutPage() {
                 {items.map((item) => (
                   <div key={item.product.id} className="flex gap-4">
                     <div className="relative w-16 h-16 bg-stone-50 border border-stone-100 flex-shrink-0">
-                      <Image src={item.product.images[0]} alt={item.product.name} fill className="object-contain p-1" />
+                      <SafeImage src={item.product.images[0]} alt={item.product.name} fill className="object-contain p-1" />
                       <span className="absolute -top-2 -right-2 bg-stone-700 text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center">
                         {item.quantity}
                       </span>

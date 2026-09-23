@@ -1,24 +1,75 @@
 @import "tailwindcss";
 
+@theme {
+  --font-display: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+}
+
+:root {
+  color-scheme: light;
+  --font-sans: "Aptos", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
 @layer base {
-  html {
-    scroll-behavior: smooth;
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
   }
 
   body {
-    font-family: var(--font-sans, 'system-ui'), sans-serif;
+    margin: 0;
     background-color: #fafaf9;
     color: #1c1917;
+    font-family: var(--font-sans), sans-serif;
     -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
 
-  * {
-    box-sizing: border-box;
+  h1,
+  h2,
+  h3,
+  .font-display {
+    font-family: var(--font-display);
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+  }
+
+  button:not(:disabled),
+  a {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  ::selection {
+    background: #fef3c7;
+    color: #1c1917;
+  }
+
+  :focus-visible {
+    outline: 2px solid #a16207;
+    outline-offset: 3px;
   }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

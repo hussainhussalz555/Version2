@@ -4,7 +4,7 @@ import { useCartStore } from "@/store/cart";
 import { formatPrice } from "@/lib/products";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Plus, Minus, Trash2, ShoppingBag } from "lucide-react";
-import Image from "next/image";
+import SafeImage from "@/components/SafeImage";
 import Link from "next/link";
 
 export default function CartDrawer() {
@@ -62,7 +62,7 @@ export default function CartDrawer() {
                   {items.map((item) => (
                     <div key={item.product.id} className="flex gap-4">
                       <div className="relative w-20 h-20 bg-stone-50 border border-stone-100 flex-shrink-0">
-                        <Image
+                        <SafeImage
                           src={item.product.images[0]}
                           alt={item.product.name}
                           fill

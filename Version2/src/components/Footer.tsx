@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
+import SafeImage from "@/components/SafeImage";
 import { BRAND_CONFIG } from "@/lib/config";
 // Social icons as inline SVG since lucide-react version may not have all icons
 
@@ -11,11 +11,12 @@ export default function Footer() {
           {/* Brand */}
           <div className="lg:col-span-2">
             <div className="relative h-10 w-36 mb-6">
-              <Image
-                src="/logo/bathae-logo.png"
+              <SafeImage
+                src="/logo.png"
                 alt="BATHAE"
                 fill
-                className="object-contain object-left"
+                fallbackKind="logo-light"
+                className="object-contain object-left brightness-0 invert"
               />
             </div>
             <p className="text-stone-400 text-sm leading-relaxed max-w-sm mb-6">

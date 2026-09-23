@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import Image from "next/image";
+import SafeImage from "@/components/SafeImage";
 import { ArrowRight } from "lucide-react";
 import { BRAND_CONFIG } from "@/lib/config";
 
@@ -159,7 +159,7 @@ export default function QualityPage() {
             {["/products/product1.png", "/products/product2.png", "/products/product3.png"].map(
               (img, i) => (
                 <div key={i} className="relative aspect-square bg-stone-100 border border-stone-200">
-                  <Image src={img} alt="Finish" fill className="object-contain p-4" />
+                  <SafeImage src={img} alt="Finish" fill className="object-contain p-4" />
                 </div>
               )
             )}

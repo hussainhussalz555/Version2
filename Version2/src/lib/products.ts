@@ -52,7 +52,6 @@ export const products: Product[] = [
     finish: "matte-black",
     images: [
       "/products/product1.png",
-      "/products/product5.png",
     ],
     description:
       "The BATHAE Concealed Shower Set in Matte Black redefines contemporary bathroom design. This complete system integrates a precision-engineered concealed valve, a 12-inch overhead rainfall head, a flexible handheld shower, and a wall-mounted bath spout — all unified by a sleek matte black finish that resists fingerprints and complements any modern interior.",
@@ -97,7 +96,6 @@ export const products: Product[] = [
     finish: "gold",
     images: [
       "/products/product2.png",
-      "/products/product6.png",
     ],
     description:
       "Elevate your bathroom to a statement of luxury with the BATHAE Concealed Shower Set in Brushed Gold. Every component in this complete system — from the concealed mixer valve to the rainfall overhead head — is unified under a warm, brushed gold finish that exudes timeless sophistication. Designed for those who view the bathroom as a space of genuine artistry.",
@@ -143,7 +141,6 @@ export const products: Product[] = [
     finish: "chrome",
     images: [
       "/products/product3.png",
-      "/products/product7.png",
     ],
     description:
       "The classic reinvented. The BATHAE Concealed Shower Set in Polished Chrome delivers the clean, reflective brilliance of high-quality chrome in a fully concealed configuration. This is the standard by which bathroom sets should be measured — precise engineering, complete components, and an enduring finish that works with any interior palette.",

@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
+import SafeImage from "@/components/SafeImage";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Plus,
@@ -25,6 +26,7 @@ interface Props {
 }
 
 export default function ProductDetailClient({ product, related }: Props) {
+  const router = useRouter();
   const [activeImage, setActiveImage] = useState(0);
   const [qty, setQty] = useState(1);
   const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -41,7 +43,7 @@ export default function ProductDetailClient({ product, related }: Props) {
 
   const handleBuyNow = () => {
     addItem(product, qty);
-    window.location.href = "/checkout";
+    router.push("/checkout");
   };
 
   const whatsappUrl = `https://wa.me/${BRAND_CONFIG.whatsappNumber}?text=${encodeURIComponent(
@@ -82,7 +84,7 @@ export default function ProductDetailClient({ product, related }: Props) {
                   transition={{ duration: 0.25 }}
                   className="absolute inset-0"
                 >
-                  <Image
+                  <SafeImage
                     src={product.images[activeImage]}
                     alt={product.name}
                     fill
@@ -109,7 +111,7 @@ export default function ProductDetailClient({ product, related }: Props) {
                         : "border-stone-100 hover:border-stone-300"
                     }`}
                   >
-                    <Image
+                    <SafeImage
                       src={img}
                       alt=""
                       fill
@@ -361,7 +363,7 @@ export default function ProductDetailClient({ product, related }: Props) {
                 exit={{ opacity: 0, scale: 0.9 }}
                 className="relative w-full max-w-3xl aspect-square"
               >
-                <Image
+                <SafeImage
                   src={product.images[activeImage]}
                   alt={product.name}
                   fill
@@ -383,7 +385,7 @@ export default function ProductDetailClient({ product, related }: Props) {
                         activeImage === i ? "border-amber-400" : "border-white/20"
                       }`}
                     >
-                      <Image src={img} alt="" fill className="object-contain p-1" />
+                      <SafeImage src={img} alt="" fill className="object-contain p-1" />
                     </button>
                   ))}
                 </div>
