@@ -73,9 +73,7 @@ export default function Header() {
               scrolled ? "h-16" : "h-20"
             }`}
           >
-            <Link href="/" aria-label="BATHAE home" className="flex flex-shrink-0 items-center">
-              <Logo size="sm" />
-            </Link>
+            <Logo size="sm" />
 
             <nav aria-label="Main navigation" className="hidden items-center gap-8 lg:flex xl:gap-10">
               {navLinks.map((link) =>
