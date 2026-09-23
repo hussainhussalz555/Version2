@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import SafeImage from "@/components/SafeImage";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
@@ -61,7 +61,7 @@ export default function AboutPage() {
             viewport={{ once: true }}
             className="relative aspect-square bg-stone-100"
           >
-            <Image
+            <SafeImage
               src="/products/product3.png"
               alt="BATHAE Chrome Shower Set"
               fill

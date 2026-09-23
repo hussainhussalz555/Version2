@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import SafeImage from "@/components/SafeImage";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import { products } from "@/lib/products";
@@ -83,7 +83,7 @@ export default function HomePage() {
           className="absolute right-0 top-0 bottom-0 w-full md:w-1/2 flex items-center justify-center opacity-40 md:opacity-60"
         >
           <div className="relative w-full h-full max-w-lg">
-            <Image
+            <SafeImage
               src="/products/product2.png"
               alt="BATHAE Shower Set"
               fill
@@ -284,7 +284,7 @@ export default function HomePage() {
             >
               <div className="relative aspect-square max-w-md mx-auto">
                 <div className="absolute inset-0 bg-stone-800" />
-                <Image
+                <SafeImage
                   src="/products/product1.png"
                   alt="Concealed Shower Set Matte Black"
                   fill
@@ -321,7 +321,7 @@ export default function HomePage() {
             >
               <Link href={cat.href} className="group block relative">
                 <div className="relative aspect-[4/5] bg-stone-100 overflow-hidden">
-                  <Image
+                  <SafeImage
                     src={cat.image}
                     alt={cat.label}
                     fill
@@ -394,7 +394,7 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="relative aspect-square bg-amber-50"
           >
-            <Image
+            <SafeImage
               src="/products/product2.png"
               alt="BATHAE Brushed Gold"
               fill

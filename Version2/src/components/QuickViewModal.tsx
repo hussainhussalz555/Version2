@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Image from "next/image";
+import SafeImage from "@/components/SafeImage";
 import Link from "next/link";
 import { X, Plus, Minus, ShoppingBag } from "lucide-react";
 import type { Product } from "@/lib/products";
@@ -58,7 +58,7 @@ export default function QuickViewModal({ product, isOpen, onClose }: QuickViewMo
                 {/* Images */}
                 <div className="bg-stone-50">
                   <div className="relative aspect-square">
-                    <Image
+                    <SafeImage
                       src={product.images[activeImg]}
                       alt={product.name}
                       fill
@@ -75,7 +75,7 @@ export default function QuickViewModal({ product, isOpen, onClose }: QuickViewMo
                             activeImg === i ? "border-stone-900" : "border-stone-100"
                           }`}
                         >
-                          <Image
+                          <SafeImage
                             src={img}
                             alt=""
                             fill

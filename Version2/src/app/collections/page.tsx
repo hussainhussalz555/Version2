@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
+import SafeImage from "@/components/SafeImage";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { products, formatPrice } from "@/lib/products";
@@ -115,7 +115,7 @@ export default function CollectionsPage() {
                 </div>
 
                 <div className={`relative aspect-square ${i % 2 === 1 ? "md:order-1" : ""}`}>
-                  <Image
+                  <SafeImage
                     src={col.image}
                     alt={col.label}
                     fill
@@ -153,7 +153,7 @@ export default function CollectionsPage() {
             >
               <Link href={`/products/${product.slug}`} className="group block">
                 <div className="relative aspect-square bg-stone-100 border border-stone-200 mb-4 overflow-hidden">
-                  <Image
+                  <SafeImage
                     src={product.images[0]}
                     alt={product.name}
                     fill

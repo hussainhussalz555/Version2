@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useCartStore } from "@/store/cart";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { ShoppingBag, Search, Menu, X } from "lucide-react";
+import SafeImage from "@/components/SafeImage";
 
 const navLinks = [
   { href: "/collections", label: "Collections" },
@@ -16,128 +17,120 @@ const navLinks = [
 ];
 
 export default function Header() {
-  const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const searchRef = useRef<HTMLInputElement>(null);
-
-  const { toggleCart, getItemCount } = useCartStore();
-  const itemCount = useCartStore((s) => s.getItemCount());
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  const router = useRouter();
+  const toggleCart = useCartStore((state) => state.toggleCart);
+  const itemCount = useCartStore((state) => state.getItemCount());
 
   useEffect(() => {
-    if (searchOpen && searchRef.current) {
-      searchRef.current.focus();
-    }
+    if (searchOpen) searchRef.current?.focus();
   }, [searchOpen]);
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      window.location.href = `/shop?search=${encodeURIComponent(searchQuery.trim())}`;
-      setSearchOpen(false);
-      setSearchQuery("");
-    }
+  useEffect(() => {
+    if (!searchOpen && !menuOpen) return;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setSearchOpen(false);
+        setMenuOpen(false);
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [searchOpen, menuOpen]);
+
+  const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const query = searchQuery.trim();
+    if (!query) return;
+    setSearchOpen(false);
+    setSearchQuery("");
+    router.push(`/shop?search=${encodeURIComponent(query)}`);
   };
 
   return (
     <>
-      <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-          scrolled
-            ? "bg-white/95 backdrop-blur-md border-b border-stone-200 shadow-sm"
-            : "bg-transparent"
-        }`}
-      >
-        <div className="max-w-screen-xl mx-auto px-6 lg:px-12">
-          <div className="flex items-center justify-between h-20">
-            {/* Logo */}
-            <Link href="/" className="flex items-center flex-shrink-0">
-              <div className="relative h-10 w-36">
-                <Image
-                  src="/logo/bathae-logo.png"
+      <header className="fixed inset-x-0 top-0 z-50 border-b border-stone-200 bg-white/95 text-stone-900 shadow-sm backdrop-blur-md">
+        <div className="mx-auto max-w-screen-xl px-6 lg:px-12">
+          <div className="flex h-20 items-center justify-between">
+            <Link href="/" aria-label="BATHAE home" className="flex flex-shrink-0 items-center">
+              <span className="relative block h-10 w-36">
+                <SafeImage
+                  src="/logo.png"
                   alt="BATHAE"
                   fill
-                  className="object-contain object-left"
                   priority
+                  fallbackKind="logo"
+                  className="object-contain object-left"
+                  sizes="144px"
                 />
-              </div>
+              </span>
             </Link>
 
-            {/* Desktop Nav */}
-            <nav className="hidden lg:flex items-center gap-10">
+            <nav aria-label="Main navigation" className="hidden items-center gap-8 lg:flex xl:gap-10">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`text-[13px] font-medium tracking-widest uppercase transition-colors duration-200 ${
-                    scrolled
-                      ? "text-stone-700 hover:text-stone-900"
-                      : "text-white/90 hover:text-white"
-                  }`}
+                  className="text-[12px] font-semibold uppercase tracking-[0.14em] text-stone-700 transition-colors hover:text-amber-700 focus-visible:text-amber-800"
                 >
                   {link.label}
                 </Link>
               ))}
             </nav>
 
-            {/* Actions */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-1 sm:gap-2">
               <button
+                type="button"
                 onClick={() => setSearchOpen(true)}
-                className={`p-2 transition-colors ${
-                  scrolled ? "text-stone-700 hover:text-stone-900" : "text-white/90 hover:text-white"
-                }`}
-                aria-label="Search"
+                className="rounded-full p-2.5 text-stone-700 transition-colors hover:bg-stone-100 hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-600"
+                aria-label="Open product search"
               >
-                <Search size={20} />
+                <Search size={20} aria-hidden="true" />
               </button>
-
               <button
+                type="button"
                 onClick={toggleCart}
-                className={`relative p-2 transition-colors ${
-                  scrolled ? "text-stone-700 hover:text-stone-900" : "text-white/90 hover:text-white"
-                }`}
-                aria-label="Cart"
+                className="relative rounded-full p-2.5 text-stone-700 transition-colors hover:bg-stone-100 hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-600"
+                aria-label={`Open shopping cart${itemCount > 0 ? `, ${itemCount} items` : ""}`}
               >
-                <ShoppingBag size={20} />
+                <ShoppingBag size={20} aria-hidden="true" />
                 {itemCount > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 bg-amber-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                  <span className="absolute right-0 top-0 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-amber-600 px-1 text-[10px] font-bold leading-none text-white">
                     {itemCount}
                   </span>
                 )}
               </button>
-
               <button
+                type="button"
                 onClick={() => setMenuOpen(true)}
-                className={`lg:hidden p-2 transition-colors ${
-                  scrolled ? "text-stone-700 hover:text-stone-900" : "text-white/90 hover:text-white"
-                }`}
-                aria-label="Menu"
+                className="rounded-full p-2.5 text-stone-700 transition-colors hover:bg-stone-100 hover:text-stone-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-600 lg:hidden"
+                aria-label="Open navigation menu"
+                aria-expanded={menuOpen}
+                aria-controls="mobile-navigation"
               >
-                <Menu size={22} />
+                <Menu size={22} aria-hidden="true" />
               </button>
             </div>
           </div>
         </div>
       </header>
 
-      {/* Search Overlay */}
       <AnimatePresence>
         {searchOpen && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[60] bg-stone-950/90 backdrop-blur-sm flex items-start pt-32 justify-center px-6"
-            onClick={(e) => {
-              if (e.target === e.currentTarget) setSearchOpen(false);
+            role="dialog"
+            aria-modal="true"
+            aria-label="Product search"
+            className="fixed inset-0 z-[60] flex items-start justify-center bg-stone-950/95 px-6 pt-32 backdrop-blur-sm"
+            onClick={(event) => {
+              if (event.target === event.currentTarget) setSearchOpen(false);
             }}
           >
             <motion.div
@@ -147,73 +140,84 @@ export default function Header() {
               className="w-full max-w-2xl"
             >
               <form onSubmit={handleSearch} className="relative">
+                <label htmlFor="site-search" className="sr-only">Search products</label>
                 <input
+                  id="site-search"
                   ref={searchRef}
-                  type="text"
+                  type="search"
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(event) => setSearchQuery(event.target.value)}
                   placeholder="Search products..."
-                  className="w-full bg-transparent border-b-2 border-amber-500 text-white text-3xl font-light py-4 pr-12 outline-none placeholder-white/30"
+                  className="w-full border-b-2 border-amber-500 bg-transparent py-4 pr-12 text-2xl font-light text-white outline-none placeholder:text-white/50 focus-visible:border-amber-300 sm:text-3xl"
                 />
                 <button
                   type="submit"
-                  className="absolute right-0 top-1/2 -translate-y-1/2 text-white/60 hover:text-white transition-colors"
+                  className="absolute right-0 top-1/2 -translate-y-1/2 rounded-full p-2 text-white/80 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+                  aria-label="Submit product search"
                 >
-                  <Search size={24} />
+                  <Search size={24} aria-hidden="true" />
                 </button>
               </form>
               <button
+                type="button"
                 onClick={() => setSearchOpen(false)}
-                className="mt-6 text-white/40 hover:text-white/80 text-sm tracking-widest uppercase transition-colors"
+                className="mt-6 rounded-sm py-2 text-sm font-medium uppercase tracking-[0.15em] text-white/70 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
               >
-                Close
+                Close search
               </button>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Mobile Menu */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[60] bg-stone-950"
+            id="mobile-navigation"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Mobile navigation"
+            className="fixed inset-0 z-[60] bg-stone-950 lg:hidden"
           >
-            <div className="flex flex-col h-full px-8 py-8">
-              <div className="flex justify-between items-center mb-16">
-                <Link href="/" onClick={() => setMenuOpen(false)}>
-                  <div className="relative h-9 w-32">
-                    <Image
-                      src="/logo/bathae-logo.png"
+            <div className="flex h-full flex-col px-8 py-8">
+              <div className="mb-12 flex items-center justify-between sm:mb-16">
+                <Link href="/" onClick={() => setMenuOpen(false)} aria-label="BATHAE home">
+                  <span className="relative block h-9 w-32 rounded bg-white px-1">
+                    <SafeImage
+                      src="/logo.png"
                       alt="BATHAE"
                       fill
+                      fallbackKind="logo"
                       className="object-contain object-left"
+                      sizes="128px"
                     />
-                  </div>
+                  </span>
                 </Link>
                 <button
+                  type="button"
                   onClick={() => setMenuOpen(false)}
-                  className="text-white/70 hover:text-white transition-colors"
+                  className="rounded-full p-2 text-white/80 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+                  aria-label="Close navigation menu"
                 >
-                  <X size={24} />
+                  <X size={24} aria-hidden="true" />
                 </button>
               </div>
 
-              <nav className="flex flex-col gap-8 flex-1">
-                {navLinks.map((link, i) => (
+              <nav aria-label="Mobile navigation links" className="flex flex-1 flex-col gap-7">
+                {navLinks.map((link, index) => (
                   <motion.div
                     key={link.href}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.08 }}
+                    transition={{ delay: index * 0.06 }}
                   >
                     <Link
                       href={link.href}
                       onClick={() => setMenuOpen(false)}
-                      className="text-white text-4xl font-light tracking-tight hover:text-amber-400 transition-colors"
+                      className="font-display text-3xl font-light tracking-tight text-white transition-colors hover:text-amber-300 focus-visible:text-amber-300 sm:text-4xl"
                     >
                       {link.label}
                     </Link>
@@ -221,8 +225,8 @@ export default function Header() {
                 ))}
               </nav>
 
-              <div className="pt-8 border-t border-white/10">
-                <p className="text-white/30 text-sm tracking-widest uppercase">BATHAE</p>
+              <div className="border-t border-white/15 pt-6">
+                <p className="text-xs font-medium uppercase tracking-[0.2em] text-white/60">BATHAE · Elevate the Everyday</p>
               </div>
             </div>
           </motion.div>
